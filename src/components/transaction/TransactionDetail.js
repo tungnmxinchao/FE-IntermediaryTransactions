@@ -405,43 +405,47 @@ const TransactionDetail = () => {
   };
 
   const handleCancelOrder = async () => {
-    try {
-      const token = localStorage.getItem('accessToken');
-      if (!token) {
-        toast.error('Bạn chưa đăng nhập');
-        return;
-      }
+    showConfirmModal(
+      'Xác nhận hủy đơn hàng',
+      'Bạn có chắc chắn muốn hủy đơn hàng do sản phẩm lỗi?',
+      async () => {
+        try {
+          const token = localStorage.getItem('accessToken');
+          if (!token) {
+            toast.error('Bạn chưa đăng nhập');
+            return;
+          }
 
-      const response = await fetch(`${API_CONFIG.BASE_URL}/api/Order/${transaction.id}/cancel-order`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
+          const response = await fetch(`${API_CONFIG.BASE_URL}/api/Order/${transaction.id}/cancel-order`, {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${token}`,
+            }
+          });
+
+          if (response.status === 401) {
+            toast.error('Không thể thực hiện thao tác');
+            return;
+          }
+
+          if (!response.ok) {
+            const errorData = await response.json();
+            toast.error(errorData.message || 'Có lỗi xảy ra');
+            return;
+          }
+
+          toast.success('Đã hủy đơn hàng do sản phẩm lỗi!');
+          setTimeout(() => {
+            window.location.reload();
+          }, 4000);
+        } catch (error) {
+          toast.error('Có lỗi xảy ra');
+        } finally {
+          closeModal();
         }
-      });
-
-      if (response.status === 401) {
-        toast.error('Không thể thực hiện thao tác');
-        return;
       }
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || 'Failed to cancel order');
-      }
-
-      const result = await response.json();
-      if (result.code === 200) {
-        toast.success('Đã hủy đơn hàng do sản phẩm lỗi!');
-        setTimeout(() => {
-          window.location.reload();
-        }, 4000);
-      } else {
-        throw new Error(result.message || 'Failed to cancel order');
-      }
-    } catch (error) {
-      toast.error(error.message);
-    }
+    );
   };
 
   const handleRequestReturn = async () => {
@@ -484,42 +488,47 @@ const TransactionDetail = () => {
   };
 
   const handleRequestBuyerCheck = async () => {
-    try {
-      const token = localStorage.getItem('accessToken');
-      if (!token) {
-        toast.error('Bạn chưa đăng nhập');
-        return;
-      }
+    showConfirmModal(
+      'Xác nhận yêu cầu kiểm tra',
+      'Bạn có chắc chắn muốn yêu cầu khách hàng kiểm tra lại?',
+      async () => {
+        try {
+          const token = localStorage.getItem('accessToken');
+          if (!token) {
+            toast.error('Bạn chưa đăng nhập');
+            return;
+          }
 
-      const response = await fetch(`${API_CONFIG.BASE_URL}/api/Order/${transaction.id}/requestBuyer-checkOrder`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
+          const response = await fetch(`${API_CONFIG.BASE_URL}/api/Order/${transaction.id}/requestBuyer-checkOrder`, {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${token}`,
+            }
+          });
+
+          if (response.status === 401) {
+            toast.error('Không thể thực hiện thao tác');
+            return;
+          }
+
+          if (!response.ok) {
+            const errorData = await response.json();
+            toast.error(errorData.message || 'Có lỗi xảy ra');
+            return;
+          }
+
+          toast.success('Đã yêu cầu khách hàng kiểm tra lại!');
+          setTimeout(() => {
+            window.location.reload();
+          }, 4000);
+        } catch (error) {
+          toast.error('Có lỗi xảy ra');
+        } finally {
+          closeModal();
         }
-      });
-
-      if (response.status === 401) {
-        toast.error('Không thể thực hiện thao tác');
-        return;
       }
-
-      if (!response.ok) {
-        throw new Error('Failed to request buyer check');
-      }
-
-      const result = await response.json();
-      if (result.code === 200) {
-        toast.success('Đã yêu cầu khách hàng kiểm tra lại!');
-        setTimeout(() => {
-          window.location.reload();
-        }, 4000);
-      } else {
-        throw new Error(result.message || 'Failed to request buyer check');
-      }
-    } catch (error) {
-      toast.error(error.message);
-    }
+    );
   };
 
   if (loading) {
