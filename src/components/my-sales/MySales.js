@@ -45,7 +45,7 @@ const MySales = () => {
     if (userId) {
       filters.push(`CreatedByUser/Id eq ${userId}`);
     }
-
+    
     // Add pagination
     query += `&$skip=${(params.page - 1) * ITEMS_PER_PAGE}&$top=${ITEMS_PER_PAGE}`;
     
@@ -59,7 +59,7 @@ const MySales = () => {
 
     // Add ordering
     query += '&$orderby=CreatedAt desc';
-
+    
     return query;
   }, []);
 

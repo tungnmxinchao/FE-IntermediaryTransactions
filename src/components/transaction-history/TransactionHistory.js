@@ -1,6 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { FaSearch, FaEye, FaFilter, FaTimes, FaArrowRight } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
+import { TransactionHistoryService } from '../../services/transaction-history.service';
+import Pagination from '../common/Pagination';
+import { PAGINATION_CONFIG } from '../../config/pagination.config';
 import './TransactionHistory.css';
 
 const TransactionHistory = () => {
@@ -11,75 +14,53 @@ const TransactionHistory = () => {
   const [status, setStatus] = useState('all');
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
-  const [isSearching, setIsSearching] = useState(false);
   const [selectedTransaction, setSelectedTransaction] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [data, setData] = useState({ value: [], '@odata.count': 0 });
+  const pageSize = PAGINATION_CONFIG.DEFAULT_PAGE_SIZE;
 
-  // Sample data - replace with actual API data
-  const transactions = [
-    {
-      id: 'TRX001',
-      amount: 15000000,
-      status: 'pending',
-      type: 'subtract',
-      note: 'Thanh toán đơn hàng #1234 - Đơn hàng mua sắm trực tuyến từ cửa hàng Thời trang ABC với các sản phẩm: Áo thun nam, Quần jean, Giày thể thao. Đơn hàng được giao đến địa chỉ: 123 Nguyễn Văn A, Quận 1, TP.HCM',
-      createdAt: '2024-03-07 10:30',
-      updatedAt: '2024-03-07 10:30',
-      transactionStatus: 'success',
-      message: 'Giao dịch đang được xử lý',
-      orderId: '1234'
-    },
-    {
-      id: 'TRX002',
-      amount: 25000000,
-      status: 'completed',
-      type: 'add',
-      note: 'Hoàn tiền đơn hàng #5678 - Đơn hàng bị hủy do khách hàng thay đổi địa chỉ giao hàng. Số tiền hoàn trả bao gồm: Giá trị đơn hàng: 23.000.000đ, Phí vận chuyển: 2.000.000đ. Thời gian hoàn tiền dự kiến: 3-5 ngày làm việc',
-      createdAt: '2024-03-07 09:15',
-      updatedAt: '2024-03-07 09:30',
-      transactionStatus: 'success',
-      message: 'Giao dịch hoàn tất',
-      orderId: '5678'
-    },
-    {
-      id: 'TRX003',
-      amount: 8000000,
-      status: 'pending',
-      type: 'subtract',
-      note: 'Thanh toán đơn hàng #9012 - Đơn hàng mua sắm từ cửa hàng Điện tử XYZ với các sản phẩm: Tai nghe Bluetooth, Sạc dự phòng 10000mAh. Đơn hàng được giao đến địa chỉ: 456 Lê Văn B, Quận 3, TP.HCM. Phương thức thanh toán: Thẻ tín dụng',
-      createdAt: '2024-03-07 08:45',
-      updatedAt: '2024-03-07 08:45',
-      transactionStatus: 'failed',
-      message: 'Giao dịch thất bại do lỗi kết nối',
-      orderId: '9012'
-    },
-    {
-      id: 'TRX004',
-      amount: 12000000,
-      status: 'completed',
-      type: 'add',
-      note: 'Hoàn tiền đơn hàng #3456 - Đơn hàng bị trả lại do sản phẩm không đúng thông số kỹ thuật. Chi tiết hoàn tiền: Giá trị sản phẩm: 10.000.000đ, Phí vận chuyển: 1.000.000đ, Bồi thường: 1.000.000đ. Thời gian hoàn tiền: 2 ngày làm việc',
-      createdAt: '2024-03-07 07:30',
-      updatedAt: '2024-03-07 07:45',
-      transactionStatus: 'success',
-      message: 'Giao dịch hoàn tất',
-      orderId: '3456'
-    },
-    {
-      id: 'TRX005',
-      amount: 30000000,
-      status: 'pending',
-      type: 'subtract',
-      note: 'Thanh toán đơn hàng #7890 - Đơn hàng mua sắm từ cửa hàng Nội thất DEF với các sản phẩm: Bộ bàn ăn 6 ghế, Tủ quần áo 3 cánh, Đèn chùm phòng khách. Đơn hàng được giao đến địa chỉ: 789 Trần Văn C, Quận 7, TP.HCM. Phương thức thanh toán: Chuyển khoản ngân hàng',
-      createdAt: '2024-03-07 06:15',
-      updatedAt: '2024-03-07 06:15',
-      transactionStatus: 'success',
-      message: 'Giao dịch đang được xử lý',
-      orderId: '7890'
+  const buildQueryParams = () => {
+    const filter = TransactionHistoryService.buildFilterQuery({
+      searchTerm,
+      minAmount,
+      maxAmount,
+      status,
+      startDate,
+      endDate
+    });
+
+    return {
+      skip: (currentPage - 1) * pageSize,
+      top: pageSize,
+      filter,
+      orderby: 'CreatedAt desc'
+    };
+  };
+
+  const fetchData = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      const result = await TransactionHistoryService.getTransactionHistory(buildQueryParams());
+      setData(result);
+    } catch (err) {
+      setError(err.message || 'Có lỗi xảy ra khi tải dữ liệu');
+    } finally {
+      setLoading(false);
     }
-  ];
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, [currentPage, searchTerm, minAmount, maxAmount, status, startDate, endDate]);
+
+  const transactions = data?.value || [];
+  const totalCount = parseInt(data?.['@odata.count']) || 0;
 
   const handleSearch = () => {
-    setIsSearching(true);
+    setCurrentPage(1);
   };
 
   const handleReset = () => {
@@ -89,11 +70,14 @@ const TransactionHistory = () => {
     setStatus('all');
     setStartDate('');
     setEndDate('');
-    setIsSearching(false);
+    setCurrentPage(1);
+  };
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
   };
 
   const handleViewDetails = (transaction) => {
-    console.log('Viewing details for transaction:', transaction); // Debug log
     setSelectedTransaction(transaction);
   };
 
@@ -102,46 +86,18 @@ const TransactionHistory = () => {
   };
 
   const handleViewOrder = () => {
-    if (selectedTransaction?.orderId) {
-      navigate(`/transaction/${selectedTransaction.orderId}`);
+    if (selectedTransaction?.Id) {
+      navigate(`/transaction/${selectedTransaction.Id}`);
     }
   };
 
-  const filteredTransactions = transactions.filter(transaction => {
-    if (!isSearching) return true;
+  if (loading) {
+    return <div className="loading">Đang tải dữ liệu...</div>;
+  }
 
-    const matchesSearch = transaction.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         transaction.note.toLowerCase().includes(searchTerm.toLowerCase());
-    
-    const amount = transaction.amount;
-    const matchesAmount = (!minAmount || amount >= Number(minAmount)) &&
-                         (!maxAmount || amount <= Number(maxAmount));
-    
-    const matchesStatus = status === 'all' || transaction.status === status;
-    
-    const transactionDate = new Date(transaction.createdAt);
-    const matchesDate = (!startDate || transactionDate >= new Date(startDate)) &&
-                       (!endDate || transactionDate <= new Date(endDate));
-    
-    return matchesSearch && matchesAmount && matchesStatus && matchesDate;
-  });
-
-  const formatCurrency = (amount) => {
-    return new Intl.NumberFormat('vi-VN', {
-      style: 'currency',
-      currency: 'VND'
-    }).format(amount);
-  };
-
-  const formatDate = (dateString) => {
-    return new Date(dateString).toLocaleString('vi-VN', {
-      year: 'numeric',
-      month: '2-digit',
-      day: '2-digit',
-      hour: '2-digit',
-      minute: '2-digit'
-    });
-  };
+  if (error) {
+    return <div className="error">{error.message}</div>;
+  }
 
   return (
     <div className="transaction-history">
@@ -222,26 +178,26 @@ const TransactionHistory = () => {
             <tr>
               <th>Mã giao dịch</th>
               <th>Số tiền</th>
-              <th>Xử lý</th>
-              <th>Ghi chú giao dịch</th>
+              <th>Loại giao dịch</th>
+              <th>Trạng thái</th>
+              <th>Ghi chú</th>
               <th>Thời gian tạo</th>
-              <th>Cập nhật cuối</th>
               <th>Hành động</th>
             </tr>
           </thead>
           <tbody>
-            {filteredTransactions.map(transaction => (
-              <tr key={transaction.id}>
-                <td title={transaction.id}>{transaction.id}</td>
-                <td title={formatCurrency(transaction.amount)}>{formatCurrency(transaction.amount)}</td>
+            {transactions.map(transaction => (
+              <tr key={transaction.Id}>
+                <td>{transaction.Id}</td>
+                <td>{TransactionHistoryService.formatAmount(transaction.Amount)}</td>
+                <td>{TransactionHistoryService.getTransactionTypeLabel(transaction.TransactionType)}</td>
                 <td>
-                  <span className={`status-badge ${transaction.status}`}>
-                    {transaction.status === 'pending' ? 'Chưa xử lý' : 'Đã xử lý'}
+                  <span className={`status-badge ${transaction.IsProcessed ? 'completed' : 'pending'}`}>
+                    {transaction.IsProcessed ? 'Đã xử lý' : 'Chưa xử lý'}
                   </span>
                 </td>
-                <td title={transaction.note}>{transaction.note}</td>
-                <td title={formatDate(transaction.createdAt)}>{formatDate(transaction.createdAt)}</td>
-                <td title={formatDate(transaction.updatedAt)}>{formatDate(transaction.updatedAt)}</td>
+                <td title={transaction.Note}>{transaction.Note}</td>
+                <td>{TransactionHistoryService.formatDate(transaction.CreatedAt)}</td>
                 <td>
                   <button 
                     className="view-details-btn" 
@@ -256,6 +212,13 @@ const TransactionHistory = () => {
         </table>
       </div>
 
+      <Pagination
+        currentPage={currentPage}
+        totalItems={totalCount}
+        itemsPerPage={pageSize}
+        onPageChange={handlePageChange}
+      />
+
       {selectedTransaction && (
         <div className="transaction-modal" onClick={handleCloseModal}>
           <div className="modal-content" onClick={e => e.stopPropagation()}>
@@ -267,49 +230,51 @@ const TransactionHistory = () => {
             </div>
             <div className="modal-body">
               <div className="detail-item">
+                <label>Mã giao dịch:</label>
+                <span>{selectedTransaction.Id}</span>
+              </div>
+              <div className="detail-item">
                 <label>Số tiền:</label>
-                <span className={`amount ${selectedTransaction.type}`}>
-                  {selectedTransaction.type === 'add' ? '+' : '-'} {formatCurrency(selectedTransaction.amount)}
-                </span>
+                <span>{TransactionHistoryService.formatAmount(selectedTransaction.Amount)}</span>
               </div>
               <div className="detail-item">
                 <label>Loại giao dịch:</label>
-                <span className={`transaction-type ${selectedTransaction.type}`}>
-                  {selectedTransaction.type === 'add' ? 'Cộng' : 'Trừ'}
-                </span>
+                <span>{TransactionHistoryService.getTransactionTypeLabel(selectedTransaction.TransactionType)}</span>
               </div>
               <div className="detail-item">
-                <label>Xử lý:</label>
-                <span className={`status-badge ${selectedTransaction.status}`}>
-                  {selectedTransaction.status === 'pending' ? 'Chưa xử lý' : 'Đã xử lý'}
+                <label>Trạng thái:</label>
+                <span className={`status-badge ${selectedTransaction.IsProcessed ? 'completed' : 'pending'}`}>
+                  {selectedTransaction.IsProcessed ? 'Đã xử lý' : 'Chưa xử lý'}
                 </span>
               </div>
               <div className="detail-item">
                 <label>Ghi chú:</label>
-                <span>{selectedTransaction.note}</span>
+                <span>{selectedTransaction.Note}</span>
               </div>
               <div className="detail-item">
-                <label>Trạng thái giao dịch:</label>
-                <span className={`transaction-status ${selectedTransaction.transactionStatus}`}>
-                  {selectedTransaction.transactionStatus === 'success' ? 'Thành công' : 'Thất bại'}
-                </span>
-              </div>
-              <div className="detail-item">
-                <label>Thông điệp:</label>
-                <span>{selectedTransaction.message}</span>
+                <label>Kết quả:</label>
+                <span>{selectedTransaction.Payload}</span>
               </div>
               <div className="detail-item">
                 <label>Thời gian tạo:</label>
-                <span>{formatDate(selectedTransaction.createdAt)}</span>
+                <span>{TransactionHistoryService.formatDate(selectedTransaction.CreatedAt)}</span>
               </div>
-              <div className="detail-item">
-                <label>Cập nhật cuối:</label>
-                <span>{formatDate(selectedTransaction.updatedAt)}</span>
-              </div>
+              {selectedTransaction.UpdatedAt && (
+                <div className="detail-item">
+                  <label>Cập nhật cuối:</label>
+                  <span>{TransactionHistoryService.formatDate(selectedTransaction.UpdatedAt)}</span>
+                </div>
+              )}
+              {selectedTransaction.OnDoneLink && (
+                <div className="detail-item">
+                  <label>Link liên kết:</label>
+                  <span>{selectedTransaction.OnDoneLink}</span>
+                </div>
+              )}
             </div>
             <div className="modal-footer">
               <button className="view-order-btn" onClick={handleViewOrder}>
-                <FaArrowRight /> Xem nguồn giao dịch
+                <FaArrowRight /> Xem chi tiết giao dịch
               </button>
             </div>
           </div>

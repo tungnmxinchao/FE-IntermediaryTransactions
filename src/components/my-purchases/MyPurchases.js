@@ -1,14 +1,27 @@
 import React, { useState, useCallback } from 'react';
+import { useSearchParams } from 'react-router-dom';
+import { AuthService } from '../../services/auth.service';
+import { API_CONFIG } from '../../config/api.config';
+import { PAGINATION_CONFIG } from '../../config/pagination.config';
+import Pagination from '../common/Pagination';
 import SearchBar from '../common/SearchBar';
 import MyPurchasesTable from './MyPurchasesTable';
-import Pagination from '../common/Pagination';
 import { useODataQuery } from '../../hooks/useODataQuery';
-import { API_CONFIG } from '../../config/api.config';
 import './MyPurchases.css';
 
 const ITEMS_PER_PAGE = 9;
 
 const MyPurchases = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [data, setData] = useState({ value: [], '@odata.count': 0 });
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  const params = {
+    page: parseInt(searchParams.get('page')) || 1,
+    status: searchParams.get('status') || 'all'
+  };
+
   const buildODataQuery = useCallback((params) => {
     let query = `${API_CONFIG.BASE_URL}${API_CONFIG.ENDPOINTS.ODATA.ORDER}?$expand=CustomerUser,CreatedByUser`;
     const filters = [];
@@ -42,7 +55,7 @@ const MyPurchases = () => {
     if (userId) {
       filters.push(`CustomerUser/Id eq ${userId}`);
     }
-
+    
     // Add pagination
     query += `&$skip=${(params.page - 1) * ITEMS_PER_PAGE}&$top=${ITEMS_PER_PAGE}`;
     
@@ -56,7 +69,7 @@ const MyPurchases = () => {
 
     // Add ordering
     query += '&$orderby=CreatedAt desc';
-
+    
     return query;
   }, []);
 
@@ -98,23 +111,23 @@ const MyPurchases = () => {
 
   const {
     data: transactions,
-    loading,
-    error,
+    loading: oDataLoading,
+    error: oDataError,
     total,
-    params,
-    updateParams
+    params: oDataParams,
+    updateParams: updateODataParams
   } = useODataQuery(fetchOrders, { page: 1 });
 
   const handleSearch = useCallback((searchParams) => {
-    updateParams({ ...searchParams, page: 1 });
-  }, [updateParams]);
+    updateODataParams({ ...searchParams, page: 1 });
+  }, [updateODataParams]);
 
   const handlePageChange = useCallback((newPage) => {
-    updateParams({ ...params, page: newPage });
-  }, [updateParams, params]);
+    updateODataParams({ ...oDataParams, page: newPage });
+  }, [updateODataParams, oDataParams]);
 
-  if (error) {
-    return <div className="error-message">Error: {error}</div>;
+  if (oDataError) {
+    return <div className="error-message">Error: {oDataError}</div>;
   }
 
   return (
@@ -128,7 +141,7 @@ const MyPurchases = () => {
 
       <SearchBar onSearch={handleSearch} />
 
-      {loading ? (
+      {oDataLoading ? (
         <div className="loading-spinner">
           <div className="spinner"></div>
           <p>Đang tải dữ liệu...</p>
@@ -137,7 +150,7 @@ const MyPurchases = () => {
         <>
           <MyPurchasesTable transactions={transactions} />
           <Pagination
-            currentPage={params.page}
+            currentPage={oDataParams.page}
             totalItems={total}
             itemsPerPage={ITEMS_PER_PAGE}
             onPageChange={handlePageChange}

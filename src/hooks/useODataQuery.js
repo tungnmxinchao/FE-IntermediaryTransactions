@@ -10,7 +10,13 @@ export const useODataQuery = (queryFn, initialParams = {}) => {
     const fetchData = useCallback(async () => {
         setLoading(true);
         try {
-            const response = await queryFn(params);
+            // Get token from localStorage
+            const token = localStorage.getItem('accessToken');
+            if (!token) {
+                throw new Error('No authentication token found');
+            }
+
+            const response = await queryFn(params, token);
             setData(response.items);
             setTotal(response.total);
             setError(null);
