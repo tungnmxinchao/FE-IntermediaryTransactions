@@ -1,5 +1,6 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
 import { AuthService } from '../services/auth.service';
+import { toast } from 'react-toastify';
 
 const AuthContext = createContext(null);
 
@@ -14,9 +15,15 @@ export const AuthProvider = ({ children }) => {
     };
 
     const logout = () => {
+        const prevUserInfo = userInfo; // Store current user info before logout
         AuthService.logout();
         setIsAuthenticated(false);
         setUserInfo(null);
+        
+        // Only show logout message if there was a user logged in
+        if (prevUserInfo) {
+            toast.success(`Tài khoản ${prevUserInfo.userName} đã đăng xuất`);
+        }
     };
 
     return (

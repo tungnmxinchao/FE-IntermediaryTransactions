@@ -12,7 +12,7 @@ import Login from './components/auth/Login';
 import Register from './components/auth/Register';
 import ProtectedRoute from './components/auth/ProtectedRoute';
 import { AuthProvider, useAuth } from './context/AuthContext';
-import { ToastContainer } from 'react-toastify';
+import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import './App.css';
 
@@ -71,8 +71,8 @@ const AppContent = () => {
   const { isAuthenticated, userInfo, logout } = useAuth();
 
   const handleLogout = () => {
-    logout();
-    navigate('/home');
+    logout(); // Just call logout, let AuthContext handle the notification
+    navigate('/home', { replace: true });
   };
 
   return (
