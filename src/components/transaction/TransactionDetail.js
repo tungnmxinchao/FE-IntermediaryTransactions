@@ -316,7 +316,7 @@ const TransactionDetail = () => {
   const handleRequestAdmin = async () => {
     showConfirmModal(
       'Xác nhận yêu cầu admin',
-      'Bạn có chắc chắn muốn yêu cầu admin can thiệp?',
+      'Admin sẽ liện hệ 2 bêm để khải quyết, hệ thống sẽ phạt 50k đối với bên nào sai, hãy kiểm tra tài khoản của của bạn còn 50k không nhé!',
       async () => {
         try {
           const token = localStorage.getItem('accessToken');
