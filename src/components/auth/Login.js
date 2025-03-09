@@ -1,10 +1,14 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { FaUser, FaLock, FaArrowRight } from 'react-icons/fa';
+import { toast } from 'react-toastify';
+import { AuthService } from '../../services/auth.service';
+import { useAuth } from '../../context/AuthContext';
 import './Auth.css';
 
 const Login = () => {
   const navigate = useNavigate();
+  const { login } = useAuth();
   const [formData, setFormData] = useState({
     username: '',
     password: ''
@@ -19,12 +23,21 @@ const Login = () => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // TODO: Implement actual login logic here
-    console.log('Login attempt:', formData);
-    // For demo, just navigate to home
-    navigate('/');
+    try {
+      const response = await AuthService.login(formData.username, formData.password);
+      
+      if (response.code === 200) {
+        login(response.data);
+        toast.success(response.message);
+        navigate('/home');
+      }
+    } catch (err) {
+      const errorMessage = err.message || 'An error occurred during login';
+      setError(errorMessage);
+      toast.error(errorMessage);
+    }
   };
 
   return (
