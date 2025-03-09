@@ -1,131 +1,87 @@
-import React, { useState, useEffect } from 'react';
-import SearchBar from '../common/SearchBar';
-import PublicMarketTable from './PublicMarketTable';
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { OrderService } from '../../services/order.service';
+import { useODataQuery } from '../../hooks/useODataQuery';
+import { format, parseISO } from 'date-fns';
+import { vi } from 'date-fns/locale';
+import Pagination from '../common/Pagination';
 import './PublicMarket.css';
 
+const ITEMS_PER_PAGE = 9;
+
 const PublicMarket = () => {
-  const [transactions, setTransactions] = useState([]);
-  const [loading, setLoading] = useState(false);
+    const {
+        data: orders,
+        loading,
+        error,
+        total,
+        params,
+        updateParams
+    } = useODataQuery(OrderService.getOrders, {
+        top: ITEMS_PER_PAGE,
+        skip: 0,
+        filter: 'IsPublic eq true AND Updateable eq true',
+        orderby: 'CreatedAt desc'
+    });
 
-  // Sample data with longer descriptions
-  const sampleTransactions = [
-    {
-      id: 1,
-      code: "TRX001",
-      topic: "Mua bán xe máy Honda Wave Alpha 2023 - Xe nhập khẩu chính hãng, đăng ký biển số, giấy tờ đầy đủ, bảo hành 1 năm",
-      seller: "Nguyễn Văn A",
-      method: "Chuyển khoản",
-      price: 25000000,
-      feeBearer: "Người mua",
-      fee: 250000,
-      createdAt: "2024-03-07T10:30:00"
-    },
-    {
-      id: 2,
-      code: "TRX002",
-      topic: "Mua bán điện thoại iPhone 15 Pro Max 256GB - Hàng chính hãng VN/A, bảo hành 1 năm",
-      seller: "Trần Thị B",
-      method: "Tiền mặt",
-      price: 15000000,
-      feeBearer: "Người bán",
-      fee: 150000,
-      createdAt: "2024-03-07T09:15:00"
-    },
-    {
-      id: 3,
-      code: "TRX003",
-      topic: "Mua bán laptop Dell XPS 15 9520 - Core i7 12700H, RAM 16GB, SSD 512GB",
-      seller: "Lê Văn C",
-      method: "Chuyển khoản",
-      price: 35000000,
-      feeBearer: "Người mua",
-      fee: 350000,
-      createdAt: "2024-03-07T08:45:00"
-    },
-    {
-      id: 4,
-      code: "TRX004",
-      topic: "Mua bán căn hộ chung cư The Sun Avenue - Quận 1, TP.HCM - Diện tích 65m2",
-      seller: "Phạm Thị D",
-      method: "Chuyển khoản",
-      price: 2500000000,
-      feeBearer: "Người mua",
-      fee: 25000000,
-      createdAt: "2024-03-07T11:20:00"
-    },
-    {
-      id: 5,
-      code: "TRX005",
-      topic: "Mua bán xe ô tô Toyota Camry 2.5G 2023 - Xe nhập khẩu Thái Lan",
-      seller: "Hoàng Văn E",
-      method: "Chuyển khoản",
-      price: 850000000,
-      feeBearer: "Người mua",
-      fee: 8500000,
-      createdAt: "2024-03-07T13:15:00"
-    }
-  ];
+    const formatDate = (dateString) => {
+        try {
+            return format(parseISO(dateString), 'dd/MM/yyyy HH:mm', { locale: vi });
+        } catch (error) {
+            return dateString;
+        }
+    };
 
-  useEffect(() => {
-    // Load sample data when component mounts
-    setTransactions(sampleTransactions);
-  }, []);
+    const handlePageChange = (pageNumber) => {
+        updateParams({ skip: (pageNumber - 1) * ITEMS_PER_PAGE });
+    };
 
-  const handleSearch = async (searchParams) => {
-    setLoading(true);
-    try {
-      // TODO: Replace with actual API call
-      const response = await fetch('/api/transactions', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(searchParams),
-      });
-      const data = await response.json();
-      setTransactions(data);
-    } catch (error) {
-      console.error('Error fetching transactions:', error);
-      // For demo purposes, filter the sample data based on search params
-      const filteredData = sampleTransactions.filter(transaction => {
-        const matchesCode = !searchParams.code || transaction.code.toLowerCase().includes(searchParams.code.toLowerCase());
-        const matchesTopic = !searchParams.topic || transaction.topic.toLowerCase().includes(searchParams.topic.toLowerCase());
-        const matchesSeller = !searchParams.seller || transaction.seller.toLowerCase().includes(searchParams.seller.toLowerCase());
-        const matchesFeeBearer = !searchParams.feeBearer || transaction.feeBearer === searchParams.feeBearer;
-        const matchesCreatedAt = !searchParams.createdAt || new Date(transaction.createdAt).toLocaleDateString() === new Date(searchParams.createdAt).toLocaleDateString();
-        
-        // Price range check
-        const matchesMinPrice = !searchParams.minPrice || transaction.price >= Number(searchParams.minPrice);
-        const matchesMaxPrice = !searchParams.maxPrice || transaction.price <= Number(searchParams.maxPrice);
+    const currentPage = Math.floor(params.skip / ITEMS_PER_PAGE) + 1;
 
-        return matchesCode && matchesTopic && matchesSeller && matchesFeeBearer && 
-               matchesCreatedAt && matchesMinPrice && matchesMaxPrice;
-      });
-      setTransactions(filteredData);
-    } finally {
-      setLoading(false);
-    }
-  };
+    if (loading) return <div className="loading">Đang tải dữ liệu...</div>;
+    if (error) return <div className="error">{error}</div>;
 
-  return (
-    <div className="public-market">
-      <div className="public-market-header">
-        <h1>Chợ công khai</h1>
-        <p>Xem và tham gia các giao dịch trung gian công khai</p>
-      </div>
+    return (
+        <div className="public-market">
+            <h1>Chợ Công Khai</h1>
+            
+            <div className="orders-grid">
+                {orders.map(order => (
+                    <div key={order.Id} className="order-card">
+                        <div className="order-header">
+                            <h2>{order.Title}</h2>
+                            <span className="price">{order.MoneyValue.toLocaleString('vi-VN')} VNĐ</span>
+                        </div>
+                        
+                        <div className="order-content">
+                            <p>{order.Description}</p>
+                            <div className="order-details">
+                                <span>Phí giao dịch: {order.FeeOnSuccess.toLocaleString('vi-VN')} VNĐ</span>
+                                <span>Người bán nhận: {order.SellerReceivedOnSuccess.toLocaleString('vi-VN')} VNĐ</span>
+                            </div>
+                            
+                            <div className="order-footer">
+                                <div className="seller-info">
+                                    <span>Người bán: {order.CreatedByUser.Username}</span>
+                                    <span>Ngày tạo: {formatDate(order.CreatedAt)}</span>
+                                </div>
+                                <Link to={`/transaction/${order.Id}`} className="view-detail-btn">
+                                    Xem chi tiết
+                                </Link>
+                            </div>
+                        </div>
+                    </div>
+                ))}
+            </div>
 
-      <SearchBar onSearch={handleSearch} />
-
-      {loading ? (
-        <div className="loading-spinner">
-          <div className="spinner"></div>
-          <p>Đang tải dữ liệu...</p>
+            <Pagination
+                currentPage={currentPage}
+                totalItems={total}
+                itemsPerPage={ITEMS_PER_PAGE}
+                onPageChange={handlePageChange}
+            />
         </div>
-      ) : (
-        <PublicMarketTable transactions={transactions} />
-      )}
-    </div>
-  );
+    );
 };
 
 export default PublicMarket; 
