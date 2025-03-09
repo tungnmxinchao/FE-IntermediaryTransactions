@@ -1,135 +1,162 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useCallback } from 'react';
 import SearchBar from '../common/SearchBar';
 import MySalesTable from './MySalesTable';
 import AddTransactionModal from './AddTransactionModal';
+import Pagination from '../common/Pagination';
+import { useODataQuery } from '../../hooks/useODataQuery';
+import { API_CONFIG } from '../../config/api.config';
 import './MySales.css';
 
+const ITEMS_PER_PAGE = 9;
+
 const MySales = () => {
-  const [transactions, setTransactions] = useState([]);
-  const [loading, setLoading] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
 
-  // Sample data
-  const sampleTransactions = [
-    {
-      id: 1,
-      code: "TRX001",
-      topic: "Mua bán xe máy Honda Wave Alpha 2023 - Xe nhập khẩu chính hãng",
-      buyer: "Nguyễn Văn X",
-      method: "Chuyển khoản",
-      price: 25000000,
-      feeBearer: "Người mua",
-      fee: 250000,
-      createdAt: "2024-03-07T10:30:00"
-    },
-    {
-      id: 2,
-      code: "TRX002",
-      topic: "Mua bán điện thoại iPhone 15 Pro Max 256GB - Hàng chính hãng",
-      buyer: "Trần Thị Y",
-      method: "Tiền mặt",
-      price: 15000000,
-      feeBearer: "Người bán",
-      fee: 150000,
-      createdAt: "2024-03-07T09:15:00"
-    },
-    {
-      id: 3,
-      code: "TRX003",
-      topic: "Mua bán laptop Dell XPS 15 9520 - Core i7 12700H",
-      buyer: "Lê Văn Z",
-      method: "Chuyển khoản",
-      price: 35000000,
-      feeBearer: "Người mua",
-      fee: 350000,
-      createdAt: "2024-03-07T08:45:00"
-    }
-  ];
+  const buildODataQuery = useCallback((params) => {
+    let query = `${API_CONFIG.BASE_URL}${API_CONFIG.ENDPOINTS.ODATA.ORDER}?$expand=CustomerUser,CreatedByUser`;
+    const filters = [];
 
-  useEffect(() => {
-    // Load sample data when component mounts
-    setTransactions(sampleTransactions);
+    // Add filters based on search params
+    if (params.topic) {
+      filters.push(`contains(tolower(Title), tolower('${params.topic}'))`);
+    }
+    if (params.minPrice) {
+      filters.push(`MoneyValue ge ${params.minPrice}`);
+    }
+    if (params.maxPrice) {
+      filters.push(`MoneyValue le ${params.maxPrice}`);
+    }
+    if (params.feeBearer) {
+      filters.push(`IsSellerChargeFee eq ${params.feeBearer === 'seller'}`);
+    }
+    if (params.buyer) {
+      filters.push(`CustomerUser/Username ne null and contains(tolower(CustomerUser/Username), tolower('${params.buyer}'))`);
+    }
+    if (params.seller) {
+      filters.push(`contains(tolower(CreatedByUser/Username), tolower('${params.seller}'))`);
+    }
+    if (params.createdAt) {
+      const date = new Date(params.createdAt);
+      filters.push(`date(CreatedAt) eq ${date.toISOString().split('T')[0]}`);
+    }
+
+    // Filter by logged in user's ID as CreatedByUser
+    const userId = localStorage.getItem('userId');
+    if (userId) {
+      filters.push(`CreatedByUser/Id eq ${userId}`);
+    }
+
+    // Add pagination
+    query += `&$skip=${(params.page - 1) * ITEMS_PER_PAGE}&$top=${ITEMS_PER_PAGE}`;
+    
+    // Add count
+    query += '&$count=true';
+
+    // Add filters if any
+    if (filters.length > 0) {
+      query += `&$filter=${filters.join(' and ')}`;
+    }
+
+    // Add ordering
+    query += '&$orderby=CreatedAt desc';
+
+    return query;
   }, []);
 
-  const handleSearch = async (searchParams) => {
-    setLoading(true);
-    try {
-      // TODO: Replace with actual API call
-      const response = await fetch('/api/my-sales', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(searchParams),
-      });
-      const data = await response.json();
-      setTransactions(data);
-    } catch (error) {
-      console.error('Error fetching transactions:', error);
-      // For demo purposes, filter the sample data based on search params
-      const filteredData = sampleTransactions.filter(transaction => {
-        const matchesCode = !searchParams.code || transaction.code.toLowerCase().includes(searchParams.code.toLowerCase());
-        const matchesTopic = !searchParams.topic || transaction.topic.toLowerCase().includes(searchParams.topic.toLowerCase());
-        const matchesBuyer = !searchParams.buyer || transaction.buyer.toLowerCase().includes(searchParams.buyer.toLowerCase());
-        const matchesFeeBearer = !searchParams.feeBearer || transaction.feeBearer === searchParams.feeBearer;
-        const matchesCreatedAt = !searchParams.createdAt || new Date(transaction.createdAt).toLocaleDateString() === new Date(searchParams.createdAt).toLocaleDateString();
-        
-        // Price range check
-        const matchesMinPrice = !searchParams.minPrice || transaction.price >= Number(searchParams.minPrice);
-        const matchesMaxPrice = !searchParams.maxPrice || transaction.price <= Number(searchParams.maxPrice);
+  const fetchOrders = useCallback(async (params) => {
+    const response = await fetch(buildODataQuery(params), {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${localStorage.getItem('token')}`,
+      },
+    });
 
-        return matchesCode && matchesTopic && matchesBuyer && matchesFeeBearer && 
-               matchesCreatedAt && matchesMinPrice && matchesMaxPrice;
-      });
-      setTransactions(filteredData);
-    } finally {
-      setLoading(false);
+    if (!response.ok) {
+      throw new Error('Failed to fetch orders');
     }
-  };
 
-  const handleAddNew = () => {
+    const data = await response.json();
+    
+    return {
+      items: data.value.map(order => ({
+        id: order.Id,
+        code: order.Id.substring(0, 8),
+        topic: order.Title,
+        description: order.Description,
+        buyer: order.CustomerUser ? order.CustomerUser.Username : "Chưa có người mua",
+        method: "Chuyển khoản",
+        price: order.MoneyValue,
+        feeBearer: order.IsSellerChargeFee ? "Người bán" : "Người mua",
+        fee: order.FeeOnSuccess,
+        createdAt: order.CreatedAt,
+        totalMoneyForBuyer: order.TotalMoneyForBuyer,
+        sellerReceived: order.SellerReceivedOnSuccess,
+        isPublic: order.IsPublic,
+        status: order.CustomerUser ? "Đã có người mua" : "Chưa có người mua"
+      })),
+      total: data['@odata.count'] || 0
+    };
+  }, [buildODataQuery]);
+
+  const {
+    data: transactions,
+    loading,
+    error,
+    total,
+    params,
+    updateParams,
+    refetch
+  } = useODataQuery(fetchOrders, { page: 1 });
+
+  const handleSearch = useCallback((searchParams) => {
+    updateParams({ ...searchParams, page: 1 });
+  }, [updateParams]);
+
+  const handlePageChange = useCallback((newPage) => {
+    updateParams({ ...params, page: newPage });
+  }, [updateParams, params]);
+
+  const handleAddNew = useCallback(() => {
     setShowAddModal(true);
-  };
+  }, []);
 
-  const handleCloseModal = () => {
+  const handleCloseModal = useCallback(() => {
     setShowAddModal(false);
-  };
+  }, []);
 
-  const handleSubmitTransaction = async (formData) => {
+  const handleSubmitTransaction = useCallback(async (formData) => {
     try {
-      // TODO: Replace with actual API call
-      const response = await fetch('/api/transactions', {
+      const newOrderData = {
+        Title: formData.topic,
+        Description: formData.description || "",
+        IsPublic: true,
+        MoneyValue: Number(formData.price),
+        IsSellerChargeFee: formData.feeBearer === 'seller',
+        FeeOnSuccess: Number(formData.price) * 0.01, // 1% fee
+      };
+
+      const response = await fetch(`${API_CONFIG.BASE_URL}${API_CONFIG.ENDPOINTS.ODATA.ORDER}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`,
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(newOrderData),
       });
       
       if (response.ok) {
-        // Refresh the transactions list
-        const newTransaction = await response.json();
-        setTransactions(prev => [newTransaction, ...prev]);
+        refetch();
         setShowAddModal(false);
       }
     } catch (error) {
       console.error('Error creating transaction:', error);
-      // For demo purposes, add a mock transaction
-      const mockTransaction = {
-        id: Date.now(),
-        code: `TRX${Math.floor(Math.random() * 1000)}`,
-        topic: formData.topic,
-        buyer: "Chưa có người mua",
-        method: formData.contactMethod,
-        price: Number(formData.price),
-        feeBearer: formData.feeBearer === 'buyer' ? 'Người mua' : 'Người bán',
-        fee: Number(formData.price) * 0.01, // 1% fee
-        createdAt: new Date().toISOString()
-      };
-      setTransactions(prev => [mockTransaction, ...prev]);
-      setShowAddModal(false);
     }
-  };
+  }, [refetch]);
+
+  if (error) {
+    return <div className="error-message">Error: {error}</div>;
+  }
 
   return (
     <div className="my-sales">
@@ -151,7 +178,15 @@ const MySales = () => {
           <p>Đang tải dữ liệu...</p>
         </div>
       ) : (
-        <MySalesTable transactions={transactions} />
+        <>
+          <MySalesTable transactions={transactions} />
+          <Pagination
+            currentPage={params.page}
+            totalItems={total}
+            itemsPerPage={ITEMS_PER_PAGE}
+            onPageChange={handlePageChange}
+          />
+        </>
       )}
 
       {showAddModal && (

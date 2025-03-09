@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 
 export const useODataQuery = (queryFn, initialParams = {}) => {
     const [data, setData] = useState([]);
@@ -7,27 +7,29 @@ export const useODataQuery = (queryFn, initialParams = {}) => {
     const [total, setTotal] = useState(0);
     const [params, setParams] = useState(initialParams);
 
-    useEffect(() => {
-        const fetchData = async () => {
-            setLoading(true);
-            try {
-                const response = await queryFn(params);
-                setData(response.items);
-                setTotal(response.total);
-                setError(null);
-            } catch (err) {
-                setError(err.message || 'An error occurred while fetching data');
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchData();
+    const fetchData = useCallback(async () => {
+        setLoading(true);
+        try {
+            const response = await queryFn(params);
+            setData(response.items);
+            setTotal(response.total);
+            setError(null);
+        } catch (err) {
+            setError(err.message || 'An error occurred while fetching data');
+            setData([]);
+            setTotal(0);
+        } finally {
+            setLoading(false);
+        }
     }, [queryFn, params]);
 
-    const updateParams = (newParams) => {
+    useEffect(() => {
+        fetchData();
+    }, [fetchData]);
+
+    const updateParams = useCallback((newParams) => {
         setParams(prev => ({ ...prev, ...newParams }));
-    };
+    }, []);
 
     return {
         data,
@@ -35,6 +37,7 @@ export const useODataQuery = (queryFn, initialParams = {}) => {
         error,
         total,
         params,
-        updateParams
+        updateParams,
+        refetch: fetchData
     };
 }; 
