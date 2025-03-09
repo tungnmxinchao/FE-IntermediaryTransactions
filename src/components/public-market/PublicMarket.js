@@ -54,7 +54,7 @@ const PublicMarket = () => {
                         </div>
                         
                         <div className="order-content">
-                            <p>{order.Description}</p>
+                            <p>Bên chịu phí: {order.isSellerChargeFee ? 'Người bán' : 'Người mua'}</p>
                             <div className="order-details">
                                 <span>Phí giao dịch: {order.FeeOnSuccess.toLocaleString('vi-VN')} VNĐ</span>
                                 <span>Người bán nhận: {order.SellerReceivedOnSuccess.toLocaleString('vi-VN')} VNĐ</span>
