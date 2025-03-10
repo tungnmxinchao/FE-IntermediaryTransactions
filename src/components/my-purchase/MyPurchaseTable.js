@@ -9,7 +9,6 @@ const MyPurchaseTable = ({ transactions }) => {
           <tr>
             <th>Mã trung gian</th>
             <th>Chủ đề</th>
-            
             <th>Người bán</th>
             <th>Phương thức liên hệ</th>
             <th>Giá tiền</th>
