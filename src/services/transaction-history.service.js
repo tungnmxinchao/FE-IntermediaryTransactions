@@ -73,9 +73,9 @@ export class TransactionHistoryService {
     static getTransactionTypeLabel(type) {
         switch (type) {
             case 1:
-                return 'Hoàn tiền';
+                return 'Cộng tiền';
             case 2:
-                return 'Phí giao dịch';
+                return 'Trừ tiền';
             default:
                 return 'Không xác định';
         }

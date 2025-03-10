@@ -86,8 +86,8 @@ const TransactionHistory = () => {
   };
 
   const handleViewOrder = () => {
-    if (selectedTransaction?.Id) {
-      navigate(`/transaction/${selectedTransaction.Id}`);
+    if (selectedTransaction?.OnDoneLink) {
+      window.location.href = selectedTransaction.OnDoneLink;
     }
   };
 
