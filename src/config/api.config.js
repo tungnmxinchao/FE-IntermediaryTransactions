@@ -8,7 +8,11 @@ export const API_CONFIG = {
         },
         ODATA: {
             ORDER: '/odata/Order',
-            USER: '/odata/User'
+            USER: '/odata/User',
+            MY_ORDER: '/odata/MyOrder'
+        },
+        ORDER_USER: {
+            CREATE_ORDER: '/api/Order'
         }
     }
 }; 

@@ -6,6 +6,7 @@ import Pagination from '../common/Pagination';
 import { useODataQuery } from '../../hooks/useODataQuery';
 import { API_CONFIG } from '../../config/api.config';
 import './MySales.css';
+import { toast } from 'react-toastify';
 
 const ITEMS_PER_PAGE = 9;
 
@@ -13,7 +14,7 @@ const MySales = () => {
   const [showAddModal, setShowAddModal] = useState(false);
 
   const buildODataQuery = useCallback((params) => {
-    let query = `${API_CONFIG.BASE_URL}${API_CONFIG.ENDPOINTS.ODATA.ORDER}?$expand=CustomerUser,CreatedByUser`;
+    let query = `${API_CONFIG.BASE_URL}${API_CONFIG.ENDPOINTS.ODATA.MY_ORDER}?$expand=CustomerUser,CreatedByUser`;
     const filters = [];
 
     // Add filters based on search params
@@ -68,7 +69,7 @@ const MySales = () => {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${localStorage.getItem('token')}`,
+        'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
       },
     });
 
@@ -133,14 +134,14 @@ const MySales = () => {
         IsPublic: true,
         MoneyValue: Number(formData.price),
         IsSellerChargeFee: formData.feeBearer === 'seller',
-        FeeOnSuccess: Number(formData.price) * 0.01, // 1% fee
+        FeeOnSuccess: Number(formData.price) * 0.05, 
       };
 
-      const response = await fetch(`${API_CONFIG.BASE_URL}${API_CONFIG.ENDPOINTS.ODATA.ORDER}`, {
+      const response = await fetch(`${API_CONFIG.BASE_URL}${API_CONFIG.ENDPOINTS.ORDER_USER.CREATE_ORDER}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`,
+          'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
         },
         body: JSON.stringify(newOrderData),
       });
@@ -150,7 +151,7 @@ const MySales = () => {
         setShowAddModal(false);
       }
     } catch (error) {
-      console.error('Error creating transaction:', error);
+      toast.error('Error creating transaction:', error);
     }
   }, [refetch]);
 
