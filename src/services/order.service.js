@@ -15,6 +15,11 @@ axiosInstance.interceptors.request.use((config) => {
     return config;
 });
 
+// Create a new axios instance without auth interceptor for public endpoints
+const publicAxiosInstance = axios.create({
+    baseURL: API_CONFIG.BASE_URL
+});
+
 export const OrderService = {
     getOrders: async (params = {}) => {
         const {
@@ -45,6 +50,43 @@ export const OrderService = {
 
         try {
             const response = await axiosInstance.get(url);
+            return {
+                items: response.data.value,
+                total: response.data['@odata.count'],
+                nextLink: response.data['@odata.nextLink']
+            };
+        } catch (error) {
+            throw error.response?.data || error.message;
+        }
+    },
+
+    getPublicOrders: async (params = {}) => {
+        const {
+            skip = 0,
+            top = 10,
+            filter = '',
+            orderby = 'CreatedAt desc',
+            expand = 'CreatedByUser'
+        } = params;
+
+        let url = API_CONFIG.ENDPOINTS.ODATA.ORDER;
+        const queryParams = [];
+
+        if (expand) queryParams.push(`$expand=${expand}`);
+        if (skip) queryParams.push(`$skip=${skip}`);
+        if (top) queryParams.push(`$top=${top}`);
+        if (filter) queryParams.push(`$filter=${filter}`);
+        if (orderby) queryParams.push(`$orderby=${orderby}`);
+        
+        // Add count to get total number of records
+        queryParams.push('$count=true');
+
+        if (queryParams.length > 0) {
+            url += '?' + queryParams.join('&');
+        }
+
+        try {
+            const response = await publicAxiosInstance.get(url);
             return {
                 items: response.data.value,
                 total: response.data['@odata.count'],

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { OrderService } from '../../services/order.service';
-import { useODataQuery } from '../../hooks/useODataQuery';
+import { usePublicODataQuery } from '../../hooks/useODataQuery';
 import { format, parseISO } from 'date-fns';
 import { vi } from 'date-fns/locale';
 import Pagination from '../common/Pagination';
@@ -17,7 +17,7 @@ const PublicMarket = () => {
         total,
         params,
         updateParams
-    } = useODataQuery(OrderService.getOrders, {
+    } = usePublicODataQuery(OrderService.getPublicOrders, {
         top: ITEMS_PER_PAGE,
         skip: 0,
         filter: 'IsPublic eq true AND Updateable eq true',
@@ -54,7 +54,7 @@ const PublicMarket = () => {
                         </div>
                         
                         <div className="order-content">
-                            <p>Bên chịu phí: {order.isSellerChargeFee ? 'Người bán' : 'Người mua'}</p>
+                            <p>Bên chịu phí: {order.IsSellerChargeFee ? 'Người bán' : 'Người mua'}</p>
                             <div className="order-details">
                                 <span>Phí giao dịch: {order.FeeOnSuccess.toLocaleString('vi-VN')} VNĐ</span>
                                 <span>Người bán nhận: {order.SellerReceivedOnSuccess.toLocaleString('vi-VN')} VNĐ</span>
@@ -62,7 +62,7 @@ const PublicMarket = () => {
                             
                             <div className="order-footer">
                                 <div className="seller-info">
-                                    <span>Người bán: {order.CreatedByUser.Username}</span>
+                                    <span>Người bán: {order.CreatedByUser?.Username || 'Chưa có người bán'}</span>
                                     <span>Ngày tạo: {formatDate(order.CreatedAt)}</span>
                                 </div>
                                 <Link to={`/transaction/${order.Id}`} className="view-detail-btn">
