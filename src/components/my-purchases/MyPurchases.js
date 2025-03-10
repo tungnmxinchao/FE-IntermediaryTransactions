@@ -23,7 +23,7 @@ const MyPurchases = () => {
   };
 
   const buildODataQuery = useCallback((params) => {
-    let query = `${API_CONFIG.BASE_URL}${API_CONFIG.ENDPOINTS.ODATA.ORDER}?$expand=CustomerUser,CreatedByUser`;
+    let query = `${API_CONFIG.BASE_URL}${API_CONFIG.ENDPOINTS.ODATA.MY_PURCHASES}?$expand=CustomerUser,CreatedByUser`;
     const filters = [];
 
     // Add filters based on search params
@@ -78,12 +78,15 @@ const MyPurchases = () => {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${localStorage.getItem('token')}`,
+        'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
       },
     });
 
     if (!response.ok) {
-      throw new Error('Failed to fetch orders');
+      return {
+        items: [],
+        total: 0
+      };
     }
 
     const data = await response.json();
@@ -95,7 +98,7 @@ const MyPurchases = () => {
         topic: order.Title,
         description: order.Description,
         seller: order.CreatedByUser.Username,
-        method: "Chuyển khoản",
+        method: order.Contact,
         price: order.MoneyValue,
         feeBearer: order.IsSellerChargeFee ? "Người bán" : "Người mua",
         fee: order.FeeOnSuccess,

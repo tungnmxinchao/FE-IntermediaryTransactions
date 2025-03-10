@@ -74,7 +74,10 @@ const MySales = () => {
     });
 
     if (!response.ok) {
-      throw new Error('Failed to fetch orders');
+      return {
+        items: [],
+        total: 0
+      };
     }
 
     const data = await response.json();
@@ -86,7 +89,7 @@ const MySales = () => {
         topic: order.Title,
         description: order.Description,
         buyer: order.CustomerUser ? order.CustomerUser.Username : "Chưa có người mua",
-        method: "Chuyển khoản",
+        method: order.Contact,
         price: order.MoneyValue,
         feeBearer: order.IsSellerChargeFee ? "Người bán" : "Người mua",
         fee: order.FeeOnSuccess,
