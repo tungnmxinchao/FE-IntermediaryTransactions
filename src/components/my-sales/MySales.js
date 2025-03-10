@@ -134,7 +134,9 @@ const MySales = () => {
         IsPublic: true,
         MoneyValue: Number(formData.price),
         IsSellerChargeFee: formData.feeBearer === 'seller',
-        FeeOnSuccess: Number(formData.price) * 0.05, 
+        FeeOnSuccess: Number(formData.price) * 0.05,
+        Contact: formData.contact,
+        HiddenValue: formData.hiddenContent || ""
       };
 
       const response = await fetch(`${API_CONFIG.BASE_URL}${API_CONFIG.ENDPOINTS.ORDER_USER.CREATE_ORDER}`, {
@@ -147,11 +149,25 @@ const MySales = () => {
       });
       
       if (response.ok) {
+        toast.success('Tạo đơn hàng thành công!');
         refetch();
         setShowAddModal(false);
+        return;
       }
+
+      if (response.status === 400) {
+        const errorData = await response.json();
+        if (errorData.errors && errorData.errors.Description) {
+          toast.error(errorData.errors.Description[0]);
+        } else {
+          toast.error('Dữ liệu không hợp lệ');
+        }
+        return;
+      }
+
+      toast.error('Có lỗi xảy ra khi tạo đơn hàng');
     } catch (error) {
-      toast.error('Error creating transaction:', error);
+      toast.error('Có lỗi xảy ra khi tạo đơn hàng');
     }
   }, [refetch]);
 
