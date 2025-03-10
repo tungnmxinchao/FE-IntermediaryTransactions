@@ -64,6 +64,29 @@ const MySales = () => {
     return query;
   }, []);
 
+  const getStatusText = (statusId) => {
+    switch (statusId) {
+      case 1:
+        return "Sẵn sàng giao dịch";
+      case 2:
+        return "Bị hủy";
+      case 3:
+        return "Kiểm tra hàng";
+      case 4:
+        return "Hoàn thành";
+      case 5:
+        return "Khiếu nại";
+      case 6:
+        return "Khiếu nại không sai";
+      case 7:
+        return "Yêu cầu admin";
+      case 8:
+        return "Chờ bên mua xác nhận";
+      default:
+        return "Không xác định";
+    }
+  };
+
   const fetchOrders = useCallback(async (params) => {
     const response = await fetch(buildODataQuery(params), {
       method: 'GET',
@@ -89,7 +112,7 @@ const MySales = () => {
         topic: order.Title,
         description: order.Description,
         buyer: order.CustomerUser ? order.CustomerUser.Username : "Chưa có người mua",
-        method: order.Contact,
+        contact: order.Contact,
         price: order.MoneyValue,
         feeBearer: order.IsSellerChargeFee ? "Người bán" : "Người mua",
         fee: order.FeeOnSuccess,
@@ -97,7 +120,8 @@ const MySales = () => {
         totalMoneyForBuyer: order.TotalMoneyForBuyer,
         sellerReceived: order.SellerReceivedOnSuccess,
         isPublic: order.IsPublic,
-        status: order.CustomerUser ? "Đã có người mua" : "Chưa có người mua"
+        status: getStatusText(order.StatusId),
+        statusId: order.StatusId
       })),
       total: data['@odata.count'] || 0
     };
