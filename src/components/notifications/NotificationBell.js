@@ -63,6 +63,12 @@ const NotificationBell = () => {
     });
 
     if (!response.ok) {
+      if (response.status === 404) {
+        return {
+          items: [],
+          total: 0
+        };
+      }
       throw new Error('Failed to fetch notifications');
     }
 
@@ -210,6 +216,10 @@ const NotificationBell = () => {
               <div className="loading-spinner">
                 <div className="spinner"></div>
                 <p>Đang tải dữ liệu...</p>
+              </div>
+            ) : notifications?.length === 0 ? (
+              <div className="no-notifications">
+                <p>Không có thông báo nào</p>
               </div>
             ) : (
               <table>

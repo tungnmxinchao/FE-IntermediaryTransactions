@@ -17,13 +17,20 @@ export const useODataQuery = (queryFn, initialParams = {}) => {
             }
 
             const response = await queryFn(params, token);
-            setData(response.items);
-            setTotal(response.total);
+            setData(response.items || []);
+            setTotal(response.total || 0);
             setError(null);
         } catch (err) {
-            setError(err.message || 'An error occurred while fetching data');
-            setData([]);
-            setTotal(0);
+            // If it's a 404 error, treat it as no data rather than an error
+            if (err.response?.status === 404) {
+                setData([]);
+                setTotal(0);
+                setError(null);
+            } else {
+                setError(err.message || 'An error occurred while fetching data');
+                setData([]);
+                setTotal(0);
+            }
         } finally {
             setLoading(false);
         }
@@ -59,13 +66,20 @@ export const usePublicODataQuery = (queryFn, initialParams = {}) => {
         setLoading(true);
         try {
             const response = await queryFn(params);
-            setData(response.items);
-            setTotal(response.total);
+            setData(response.items || []);
+            setTotal(response.total || 0);
             setError(null);
         } catch (err) {
-            setError(err.message || 'An error occurred while fetching data');
-            setData([]);
-            setTotal(0);
+            // If it's a 404 error, treat it as no data rather than an error
+            if (err.response?.status === 404) {
+                setData([]);
+                setTotal(0);
+                setError(null);
+            } else {
+                setError(err.message || 'An error occurred while fetching data');
+                setData([]);
+                setTotal(0);
+            }
         } finally {
             setLoading(false);
         }
