@@ -15,6 +15,7 @@ const TransactionHistoryPage = () => {
   const [total, setTotal] = useState(0);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedTransaction, setSelectedTransaction] = useState(null);
+  const [updating, setUpdating] = useState(false);
   const [filters, setFilters] = useState({
     username: '',
     transactionType: undefined,
@@ -258,6 +259,49 @@ const TransactionHistoryPage = () => {
     });
   };
 
+  const handleUpdateStatus = async (id, isProcessed) => {
+    try {
+      setUpdating(true);
+      await axios.put(`https://localhost:7054/api/TransactionHistory/${id}/${isProcessed}`, null, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+        },
+      });
+      
+      toast.success('Cập nhật trạng thái thành công!', {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      });
+      
+      // Cập nhật lại danh sách và đóng modal
+      fetchTransactions();
+      setIsModalVisible(false);
+      setSelectedTransaction(null);
+    } catch (error) {
+      if (error.response?.status === 401) {
+        localStorage.removeItem('accessToken');
+        localStorage.removeItem('user');
+        navigate('/login');
+        return;
+      }
+      toast.error('Không thể cập nhật trạng thái!', {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      });
+      console.error('Error updating transaction status:', error);
+    } finally {
+      setUpdating(false);
+    }
+  };
+
   return (
     <div className="dashboard-page">
       <div className="page-header">
@@ -338,7 +382,16 @@ const TransactionHistoryPage = () => {
           setIsModalVisible(false);
           setSelectedTransaction(null);
         }}
-        footer={null}
+        footer={[
+          <Button 
+            key="update" 
+            type="primary"
+            loading={updating}
+            onClick={() => handleUpdateStatus(selectedTransaction?.Id, !selectedTransaction?.IsProcessed)}
+          >
+            {selectedTransaction?.IsProcessed ? 'Đánh dấu chưa xử lý' : 'Đánh dấu đã xử lý'}
+          </Button>
+        ]}
         width={800}
       >
         {selectedTransaction && (
