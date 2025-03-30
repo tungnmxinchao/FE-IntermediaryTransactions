@@ -40,4 +40,15 @@ export const userService = {
       throw error;
     }
   },
+
+  updateUser: async (userId, userData) => {
+    try {
+      const response = await axios.put(`${API_URL}/Users/${userId}/admin-update-user`, userData, {
+        headers: getAuthHeader(),
+      });
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
 }; 

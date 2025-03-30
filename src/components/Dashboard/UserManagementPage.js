@@ -3,11 +3,13 @@ import { Table, Tag, Space, Button, Input, Modal, Form, message, Select, Row, Co
 import { EditOutlined, DeleteOutlined, SearchOutlined, UserAddOutlined, ReloadOutlined } from '@ant-design/icons';
 import { userService } from '../../services/userService';
 import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
 import './Dashboard.css';
 
 const { RangePicker } = DatePicker;
 
 const UserManagementPage = () => {
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [users, setUsers] = useState([]);
   const [total, setTotal] = useState(0);
@@ -23,6 +25,7 @@ const UserManagementPage = () => {
     role: 'all',
     createdAt: null,
   });
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(null);
 
   const columns = [
     {
@@ -128,6 +131,18 @@ const UserManagementPage = () => {
     return filterConditions.length > 0 ? filterConditions.join(' and ') : undefined;
   };
 
+  const handleApiError = (error) => {
+    if (error.response?.status === 401) {
+      // Clear any stored auth data
+      localStorage.removeItem('accessToken');
+      localStorage.removeItem('user');
+      // Redirect to login
+      navigate('/login');
+      return;
+    }
+    throw error;
+  };
+
   const fetchUsers = async (page = 1, pageSize = 10) => {
     try {
       setLoading(true);
@@ -140,6 +155,7 @@ const UserManagementPage = () => {
       setUsers(response.value);
       setTotal(response['@odata.count']);
     } catch (error) {
+      handleApiError(error);
       toast.error('Failed to fetch users!', {
         position: "top-right",
         autoClose: 5000,
@@ -181,29 +197,79 @@ const UserManagementPage = () => {
   };
 
   const handleEdit = (user) => {
+    setIsCreating(false);
     setEditingUser(user);
-    form.setFieldsValue(user);
+    form.setFieldsValue({
+      Email: user.Email,
+      IsActive: user.IsActive,
+      RoleId: user.RoleId - 1, // Convert to 0-based index for Select
+    });
     setIsModalVisible(true);
   };
 
   const handleDelete = (user) => {
-    Modal.confirm({
-      title: 'Are you sure you want to delete this user?',
-      content: `This will permanently delete ${user.Username}'s account.`,
-      okText: 'Yes',
-      okType: 'danger',
-      cancelText: 'No',
-      onOk() {
-        toast.success('User deleted successfully!', {
-          position: "top-right",
-          autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-        });
-      },
-    });
+    const confirmTag = (
+      <div style={{ 
+        position: 'fixed', 
+        top: '50%', 
+        left: '50%', 
+        transform: 'translate(-50%, -50%)',
+        backgroundColor: 'white',
+        padding: '20px',
+        borderRadius: '8px',
+        boxShadow: '0 2px 8px rgba(0,0,0,0.15)',
+        zIndex: 1000,
+        width: '300px'
+      }}>
+        <h3 style={{ marginBottom: '15px' }}>Xác nhận vô hiệu hóa tài khoản</h3>
+        <p style={{ marginBottom: '20px' }}>Bạn có chắc chắn muốn vô hiệu hóa tài khoản của {user.Username}?</p>
+        <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px' }}>
+          <Button onClick={() => setShowDeleteConfirm(null)}>Hủy</Button>
+          <Button 
+            type="primary" 
+            danger 
+            onClick={async () => {
+              try {
+                const response = await userService.updateUser(user.Id, {
+                  email: user.Email,
+                  isActive: false,
+                  roleId: user.RoleId,
+                });
+                
+                if (response) {
+                  toast.success('Vô hiệu hóa tài khoản thành công!', {
+                    position: "top-right",
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                  });
+                  fetchUsers(); // Refresh the user list
+                }
+              } catch (error) {
+                console.error('Error deactivating user:', error);
+                handleApiError(error);
+                toast.error(error.response?.data?.message || 'Vô hiệu hóa tài khoản thất bại!', {
+                  position: "top-right",
+                  autoClose: 5000,
+                  hideProgressBar: false,
+                  closeOnClick: true,
+                  pauseOnHover: true,
+                  draggable: true,
+                });
+              } finally {
+                setShowDeleteConfirm(null);
+              }
+            }}
+          >
+            Đồng ý
+          </Button>
+        </div>
+      </div>
+    );
+
+    setShowDeleteConfirm(confirmTag);
   };
 
   const handleAddNew = () => {
@@ -233,7 +299,11 @@ const UserManagementPage = () => {
         });
       } else {
         // Update existing user
-        console.log('Form values:', values);
+        await userService.updateUser(editingUser.Id, {
+          email: values.Email,
+          isActive: values.IsActive,
+          roleId: values.RoleId + 1, // Convert back to 1-based index
+        });
         toast.success('User updated successfully!', {
           position: "top-right",
           autoClose: 3000,
@@ -246,8 +316,10 @@ const UserManagementPage = () => {
       
       setIsModalVisible(false);
       form.resetFields();
+      setEditingUser(null);
       fetchUsers(); // Refresh the user list
     } catch (error) {
+      handleApiError(error);
       toast.error(error.response?.data?.message || 'Operation failed!', {
         position: "top-right",
         autoClose: 5000,
@@ -263,10 +335,29 @@ const UserManagementPage = () => {
     setIsModalVisible(false);
     form.resetFields();
     setIsCreating(false);
+    setEditingUser(null);
   };
 
   return (
     <div className="dashboard-page">
+      {showDeleteConfirm && (
+        <>
+          <div 
+            style={{
+              position: 'fixed',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              backgroundColor: 'rgba(0,0,0,0.5)',
+              zIndex: 999
+            }}
+            onClick={() => setShowDeleteConfirm(null)}
+          />
+          {showDeleteConfirm}
+        </>
+      )}
+      
       <div className="page-header">
         <h1>User Management</h1>
         <div className="header-actions">
@@ -373,42 +464,53 @@ const UserManagementPage = () => {
           form={form}
           layout="vertical"
         >
-          <Form.Item
-            name="Username"
-            label="Username"
-            rules={[{ required: true, message: 'Please input username!' }]}
-          >
-            <Input />
-          </Form.Item>
-          {isCreating && (
-            <Form.Item
-              name="Password"
-              label="Password"
-              rules={[{ required: true, message: 'Please input password!' }]}
-            >
-              <Input.Password />
-            </Form.Item>
-          )}
-          <Form.Item
-            name="Email"
-            label="Email"
-            rules={[
-              { required: true, message: 'Please input email!' },
-              { type: 'email', message: 'Please input valid email!' }
-            ]}
-          >
-            <Input />
-          </Form.Item>
-          {!isCreating && (
+          {isCreating ? (
             <>
+              <Form.Item
+                name="Username"
+                label="Username"
+                rules={[{ required: true, message: 'Please input username!' }]}
+              >
+                <Input />
+              </Form.Item>
+              <Form.Item
+                name="Password"
+                label="Password"
+                rules={[{ required: true, message: 'Please input password!' }]}
+              >
+                <Input.Password />
+              </Form.Item>
+              <Form.Item
+                name="Email"
+                label="Email"
+                rules={[
+                  { required: true, message: 'Please input email!' },
+                  { type: 'email', message: 'Please input valid email!' }
+                ]}
+              >
+                <Input />
+              </Form.Item>
+            </>
+          ) : (
+            <>
+              <Form.Item
+                name="Email"
+                label="Email"
+                rules={[
+                  { required: true, message: 'Please input email!' },
+                  { type: 'email', message: 'Please input valid email!' }
+                ]}
+              >
+                <Input />
+              </Form.Item>
               <Form.Item
                 name="RoleId"
                 label="Role"
                 rules={[{ required: true, message: 'Please select role!' }]}
               >
                 <Select>
-                  <Select.Option value={1}>Admin</Select.Option>
-                  <Select.Option value={2}>Customer</Select.Option>
+                  <Select.Option value={0}>Admin</Select.Option>
+                  <Select.Option value={1}>Customer</Select.Option>
                 </Select>
               </Form.Item>
               <Form.Item
