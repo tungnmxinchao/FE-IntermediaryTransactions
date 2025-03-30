@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Table, Tag, Space, Button, Input, Modal, Form, message, Select, Row, Col } from 'antd';
-import { EyeOutlined, CheckCircleOutlined, CloseCircleOutlined, SearchOutlined, ReloadOutlined } from '@ant-design/icons';
+import { EyeOutlined, CheckCircleOutlined, CloseCircleOutlined, SearchOutlined, ReloadOutlined, CheckOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import axios from 'axios';
@@ -11,6 +11,8 @@ const OrderManagementPage = () => {
   const [loading, setLoading] = useState(false);
   const [orders, setOrders] = useState([]);
   const [total, setTotal] = useState(0);
+  const [showDisputeModal, setShowDisputeModal] = useState(false);
+  const [selectedOrder, setSelectedOrder] = useState(null);
   const [filters, setFilters] = useState({
     id: '',
     title: '',
@@ -127,6 +129,19 @@ const OrderManagementPage = () => {
           >
             Chi tiết
           </Button>
+          {record.StatusId === 7 && (
+            <Button
+              type="primary"
+              danger
+              icon={<CheckOutlined />}
+              onClick={() => {
+                setSelectedOrder(record);
+                setShowDisputeModal(true);
+              }}
+            >
+              Xử lý khiếu nại
+            </Button>
+          )}
         </Space>
       ),
     },
@@ -237,6 +252,51 @@ const OrderManagementPage = () => {
     });
   };
 
+  const handleResolveDispute = async (isSellerCorrect) => {
+    try {
+      const response = await axios.post(
+        `https://localhost:7054/api/Order/${selectedOrder.Id}/resolve-dispute`,
+        {
+          orderId: selectedOrder.Id,
+          isSellerCorrect: isSellerCorrect
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+          },
+        }
+      );
+
+      toast.success('Xử lý khiếu nại thành công!', {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      });
+
+      setShowDisputeModal(false);
+      fetchOrders(); // Refresh the orders list
+    } catch (error) {
+      if (error.response?.status === 401) {
+        localStorage.removeItem('accessToken');
+        localStorage.removeItem('user');
+        navigate('/login');
+        return;
+      }
+      toast.error('Không thể xử lý khiếu nại!', {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      });
+      console.error('Error resolving dispute:', error);
+    }
+  };
+
   return (
     <div className="dashboard-page">
       <div className="page-header">
@@ -337,6 +397,36 @@ const OrderManagementPage = () => {
           }}
         />
       </div>
+
+      {/* Dispute Resolution Modal */}
+      <Modal
+        title="Xử lý khiếu nại"
+        open={showDisputeModal}
+        onCancel={() => setShowDisputeModal(false)}
+        footer={null}
+      >
+        <div style={{ textAlign: 'center', padding: '20px' }}>
+          <h3>Bạn hãy xác nhận bên đúng</h3>
+          <Space size="large" style={{ marginTop: '20px' }}>
+            <Button
+              type="primary"
+              icon={<CheckCircleOutlined />}
+              onClick={() => handleResolveDispute(true)}
+              style={{ minWidth: '120px' }}
+            >
+              Bên bán đúng
+            </Button>
+            <Button
+              danger
+              icon={<CloseCircleOutlined />}
+              onClick={() => handleResolveDispute(false)}
+              style={{ minWidth: '120px' }}
+            >
+              Bên mua đúng
+            </Button>
+          </Space>
+        </div>
+      </Modal>
     </div>
   );
 };
