@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link, Navigate, useNavigate } from 'react-router-dom';
-import { FaSignOutAlt, FaChevronDown, FaUser, FaWallet } from 'react-icons/fa';
+import { FaSignOutAlt, FaChevronDown, FaUser, FaWallet, FaEye } from 'react-icons/fa';
 import PublicMarket from './components/public-market/PublicMarket';
 import MySales from './components/my-sales/MySales';
 import MyPurchases from './components/my-purchases/MyPurchases';
@@ -181,10 +181,10 @@ const AppContent = () => {
                 )}
               </div>
               
-              <NotificationBell />
-              <Link to="/profile" className="profile-button">
-                <FaUser /> Xem hồ sơ
+              <Link to="/profile" className="nav-links a">
+                <FaEye /> Xem hồ sơ
               </Link>
+              <NotificationBell />
               <button onClick={handleLogout} className="auth-button">
                 <FaSignOutAlt /> Đăng xuất
               </button>

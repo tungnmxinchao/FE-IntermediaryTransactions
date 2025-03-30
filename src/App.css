@@ -391,6 +391,11 @@
   font-size: 1.1rem;
 }
 
+.menu-icon {
+  font-size: 1.1rem;
+  color: #4299e1;
+}
+
 .menu-item {
   display: flex;
   align-items: center;
@@ -410,6 +415,11 @@
 
 .menu-item:hover {
   background-color: #f7fafc;
+  color: #4299e1;
+}
+
+.menu-item:hover .menu-icon {
+  color: #3182ce;
 }
 
 .logout-item {
