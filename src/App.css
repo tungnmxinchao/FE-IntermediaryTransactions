@@ -240,6 +240,22 @@
   color: white;
 }
 
+.admin-link {
+  text-decoration: none;
+  color: #4a5568;
+  font-weight: 500;
+  padding: 0.5rem 1rem;
+  border-radius: 0.375rem;
+  transition: all 0.2s;
+  background-color: #ebf8ff;
+  color: #4299e1;
+}
+
+.admin-link:hover {
+  background-color: #bee3f8;
+  color: #2b6cb0;
+}
+
 @media (max-width: 768px) {
   .navbar {
     padding: 1rem;

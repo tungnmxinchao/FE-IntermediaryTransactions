@@ -99,6 +99,9 @@ const AppContent = () => {
           <Link to="/public-market">Chợ công khai</Link>
           {isAuthenticated ? (
             <>
+              {userInfo?.userRole === 'Admin' && (
+                <Link to="/dashboard" className="admin-link">Dashboard</Link>
+              )}
               <div className="dropdown" ref={dropdownRef}>
                 <button 
                   className="dropdown-toggle"
