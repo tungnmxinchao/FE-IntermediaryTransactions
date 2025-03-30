@@ -206,6 +206,7 @@ const TransactionHistoryPage = () => {
           $skip: (page - 1) * pageSize,
           $top: pageSize,
           $count: true,
+          $orderby: 'Id desc',
         },
         headers: {
           Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
@@ -365,6 +366,7 @@ const TransactionHistoryPage = () => {
           rowKey="Id"
           loading={loading}
           onChange={handleTableChange}
+          scroll={{ x: 1500 }}
           pagination={{ 
             total,
             pageSize: 10,
