@@ -797,11 +797,11 @@ const TransactionDetail = () => {
               <div className="share-link">
                 <input 
                   type="text" 
-                  value={`${window.location.origin}/transaction/${transaction.shareLink}`} 
+                  value={`${transaction.shareLink}`} 
                   readOnly 
                 />
                 <button onClick={() => {
-                  navigator.clipboard.writeText(`${window.location.origin}/transaction/${transaction.shareLink}`);
+                  navigator.clipboard.writeText(`${transaction.shareLink}`);
                   toast.success('Đã sao chép link chia sẻ!');
                 }}>
                   Sao chép

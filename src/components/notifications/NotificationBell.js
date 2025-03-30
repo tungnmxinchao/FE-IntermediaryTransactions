@@ -150,7 +150,7 @@ const NotificationBell = () => {
 
   const handleBellClick = () => {
     setIsOpen(!isOpen);
-    // Refetch notifications when opening the dropdown
+    // Refetch notifications when opening the dropdown  
     if (!isOpen) {
       refetch();
     }
