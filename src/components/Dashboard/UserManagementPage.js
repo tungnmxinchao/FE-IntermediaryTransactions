@@ -1,34 +1,57 @@
-import React, { useState } from 'react';
-import { Table, Tag, Space, Button, Input, Modal, Form, message, Select } from 'antd';
-import { EditOutlined, DeleteOutlined, SearchOutlined, UserAddOutlined } from '@ant-design/icons';
+import React, { useState, useEffect } from 'react';
+import { Table, Tag, Space, Button, Input, Modal, Form, message, Select, Row, Col, DatePicker } from 'antd';
+import { EditOutlined, DeleteOutlined, SearchOutlined, UserAddOutlined, ReloadOutlined } from '@ant-design/icons';
+import { userService } from '../../services/userService';
 import './Dashboard.css';
 
+const { RangePicker } = DatePicker;
+
 const UserManagementPage = () => {
-  const [searchText, setSearchText] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [users, setUsers] = useState([]);
+  const [total, setTotal] = useState(0);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [form] = Form.useForm();
   const [editingUser, setEditingUser] = useState(null);
+  const [filters, setFilters] = useState({
+    id: '',
+    username: '',
+    email: '',
+    isActive: 'all',
+    role: 'all',
+    createdAt: null,
+  });
 
   const columns = [
     {
-      title: 'User ID',
-      dataIndex: 'id',
-      key: 'id',
+      title: 'ID',
+      dataIndex: 'Id',
+      key: 'Id',
+      sorter: true,
     },
     {
-      title: 'Name',
-      dataIndex: 'name',
-      key: 'name',
+      title: 'Username',
+      dataIndex: 'Username',
+      key: 'Username',
     },
     {
       title: 'Email',
-      dataIndex: 'email',
-      key: 'email',
+      dataIndex: 'Email',
+      key: 'Email',
+    },
+    {
+      title: 'Money',
+      dataIndex: 'Money',
+      key: 'Money',
+      render: (money) => new Intl.NumberFormat('vi-VN', {
+        style: 'currency',
+        currency: 'VND'
+      }).format(money),
     },
     {
       title: 'Role',
-      dataIndex: 'role',
-      key: 'role',
+      dataIndex: ['role', 'RoleName'],
+      key: 'RoleName',
       render: (role) => (
         <Tag color={role === 'Admin' ? 'blue' : 'green'}>
           {role}
@@ -37,13 +60,19 @@ const UserManagementPage = () => {
     },
     {
       title: 'Status',
-      dataIndex: 'status',
-      key: 'status',
-      render: (status) => (
-        <Tag color={status === 'Active' ? 'green' : 'red'}>
-          {status}
+      dataIndex: 'IsActive',
+      key: 'IsActive',
+      render: (isActive) => (
+        <Tag color={isActive ? 'green' : 'red'}>
+          {isActive ? 'Active' : 'Inactive'}
         </Tag>
       ),
+    },
+    {
+      title: 'Created At',
+      dataIndex: 'CreatedAt',
+      key: 'CreatedAt',
+      render: (date) => new Date(date).toLocaleString(),
     },
     {
       title: 'Actions',
@@ -69,22 +98,78 @@ const UserManagementPage = () => {
     },
   ];
 
-  const data = [
-    {
-      id: '1',
-      name: 'John Doe',
-      email: 'john@example.com',
-      role: 'Admin',
-      status: 'Active',
-    },
-    {
-      id: '2',
-      name: 'Jane Smith',
-      email: 'jane@example.com',
-      role: 'User',
-      status: 'Inactive',
-    },
-  ];
+  const buildFilterString = () => {
+    const filterConditions = [];
+    
+    if (filters.id) {
+      filterConditions.push(`Id eq ${filters.id}`);
+    }
+    if (filters.username) {
+      filterConditions.push(`contains(Username,'${filters.username}')`);
+    }
+    if (filters.email) {
+      filterConditions.push(`contains(Email,'${filters.email}')`);
+    }
+    if (filters.isActive !== 'all') {
+      filterConditions.push(`IsActive eq ${filters.isActive === 'true'}`);
+    }
+    if (filters.role !== 'all') {
+      filterConditions.push(`RoleId eq ${filters.role}`);
+    }
+    if (filters.createdAt) {
+      const [startDate, endDate] = filters.createdAt;
+      if (startDate && endDate) {
+        filterConditions.push(`CreatedAt ge ${startDate.toISOString()} and CreatedAt le ${endDate.toISOString()}`);
+      }
+    }
+
+    return filterConditions.length > 0 ? filterConditions.join(' and ') : undefined;
+  };
+
+  const fetchUsers = async (page = 1, pageSize = 10) => {
+    try {
+      setLoading(true);
+      const filterString = buildFilterString();
+      const response = await userService.getUsers({
+        filter: filterString,
+        skip: (page - 1) * pageSize,
+        top: pageSize,
+      });
+      setUsers(response.value);
+      setTotal(response['@odata.count']);
+    } catch (error) {
+      message.error('Failed to fetch users');
+      console.error('Error fetching users:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchUsers();
+  }, [filters]);
+
+  const handleTableChange = (pagination, filters, sorter) => {
+    fetchUsers(pagination.current, pagination.pageSize);
+  };
+
+  const handleFilterChange = (field, value) => {
+    setFilters(prev => ({
+      ...prev,
+      [field]: value
+    }));
+  };
+
+  const handleResetFilters = () => {
+    setFilters({
+      id: '',
+      username: '',
+      email: '',
+      isActive: 'all',
+      role: 'all',
+      createdAt: null,
+    });
+  };
 
   const handleEdit = (user) => {
     setEditingUser(user);
@@ -95,7 +180,7 @@ const UserManagementPage = () => {
   const handleDelete = (user) => {
     Modal.confirm({
       title: 'Are you sure you want to delete this user?',
-      content: `This will permanently delete ${user.name}'s account.`,
+      content: `This will permanently delete ${user.Username}'s account.`,
       okText: 'Yes',
       okType: 'danger',
       cancelText: 'No',
@@ -119,13 +204,6 @@ const UserManagementPage = () => {
       <div className="page-header">
         <h1>User Management</h1>
         <div className="header-actions">
-          <Input
-            placeholder="Search users..."
-            prefix={<SearchOutlined />}
-            value={searchText}
-            onChange={(e) => setSearchText(e.target.value)}
-            style={{ width: 200 }}
-          />
           <Button 
             type="primary" 
             icon={<UserAddOutlined />}
@@ -137,11 +215,80 @@ const UserManagementPage = () => {
       </div>
 
       <div className="content-card">
+        <Row gutter={[16, 16]} className="filter-row">
+          <Col xs={24} sm={12} md={6}>
+            <Input
+              placeholder="Search by ID"
+              value={filters.id}
+              onChange={(e) => handleFilterChange('id', e.target.value)}
+            />
+          </Col>
+          <Col xs={24} sm={12} md={6}>
+            <Input
+              placeholder="Search by Username"
+              value={filters.username}
+              onChange={(e) => handleFilterChange('username', e.target.value)}
+            />
+          </Col>
+          <Col xs={24} sm={12} md={6}>
+            <Input
+              placeholder="Search by Email"
+              value={filters.email}
+              onChange={(e) => handleFilterChange('email', e.target.value)}
+            />
+          </Col>
+          <Col xs={24} sm={12} md={6}>
+            <Select
+              placeholder="Status"
+              style={{ width: '100%' }}
+              value={filters.isActive}
+              onChange={(value) => handleFilterChange('isActive', value)}
+              allowClear
+            >
+              <Select.Option value="all">All</Select.Option>
+              <Select.Option value="true">Active</Select.Option>
+              <Select.Option value="false">Inactive</Select.Option>
+            </Select>
+          </Col>
+          <Col xs={24} sm={12} md={6}>
+            <Select
+              placeholder="Role"
+              style={{ width: '100%' }}
+              value={filters.role}
+              onChange={(value) => handleFilterChange('role', value)}
+              allowClear
+            >
+              <Select.Option value="all">All</Select.Option>
+              <Select.Option value="1">Admin</Select.Option>
+              <Select.Option value="2">Customer</Select.Option>
+            </Select>
+          </Col>
+          <Col xs={24} sm={12} md={6}>
+            <RangePicker
+              style={{ width: '100%' }}
+              value={filters.createdAt}
+              onChange={(dates) => handleFilterChange('createdAt', dates)}
+            />
+          </Col>
+          <Col xs={24} sm={12} md={6}>
+            <Button 
+              icon={<ReloadOutlined />}
+              onClick={handleResetFilters}
+              style={{ width: '100%' }}
+            >
+              Reset Filters
+            </Button>
+          </Col>
+        </Row>
+
         <Table
           columns={columns}
-          dataSource={data}
-          rowKey="id"
+          dataSource={users}
+          rowKey="Id"
+          loading={loading}
+          onChange={handleTableChange}
           pagination={{ 
+            total,
             pageSize: 10,
             showSizeChanger: true,
             showQuickJumper: true,
@@ -164,14 +311,14 @@ const UserManagementPage = () => {
           layout="vertical"
         >
           <Form.Item
-            name="name"
-            label="Name"
-            rules={[{ required: true, message: 'Please input user name!' }]}
+            name="Username"
+            label="Username"
+            rules={[{ required: true, message: 'Please input username!' }]}
           >
             <Input />
           </Form.Item>
           <Form.Item
-            name="email"
+            name="Email"
             label="Email"
             rules={[
               { required: true, message: 'Please input email!' },
@@ -181,23 +328,23 @@ const UserManagementPage = () => {
             <Input />
           </Form.Item>
           <Form.Item
-            name="role"
+            name="RoleId"
             label="Role"
             rules={[{ required: true, message: 'Please select role!' }]}
           >
             <Select>
-              <Select.Option value="Admin">Admin</Select.Option>
-              <Select.Option value="User">User</Select.Option>
+              <Select.Option value={1}>Admin</Select.Option>
+              <Select.Option value={2}>Customer</Select.Option>
             </Select>
           </Form.Item>
           <Form.Item
-            name="status"
+            name="IsActive"
             label="Status"
             rules={[{ required: true, message: 'Please select status!' }]}
           >
             <Select>
-              <Select.Option value="Active">Active</Select.Option>
-              <Select.Option value="Inactive">Inactive</Select.Option>
+              <Select.Option value={true}>Active</Select.Option>
+              <Select.Option value={false}>Inactive</Select.Option>
             </Select>
           </Form.Item>
         </Form>
