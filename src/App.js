@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link, Navigate, useNavigate } from 'react-router-dom';
-import { FaSignOutAlt } from 'react-icons/fa';
+import { FaSignOutAlt, FaChevronDown } from 'react-icons/fa';
 import PublicMarket from './components/public-market/PublicMarket';
 import MySales from './components/my-sales/MySales';
 import MyPurchases from './components/my-purchases/MyPurchases';
@@ -69,9 +69,24 @@ const Home = () => {
 const AppContent = () => {
   const navigate = useNavigate();
   const { isAuthenticated, userInfo, logout } = useAuth();
+  const [showDropdown, setShowDropdown] = useState(false);
+  const dropdownRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setShowDropdown(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   const handleLogout = () => {
-    logout(); // Just call logout, let AuthContext handle the notification
+    logout();
     navigate('/home', { replace: true });
   };
 
@@ -84,9 +99,21 @@ const AppContent = () => {
           <Link to="/public-market">Chợ công khai</Link>
           {isAuthenticated ? (
             <>
-              <Link to="/my-sales">Đơn bán của tôi</Link>
-              <Link to="/my-purchases">Đơn mua của tôi</Link>
-              <Link to="/transaction-history">Lịch sử giao dịch</Link>
+              <div className="dropdown" ref={dropdownRef}>
+                <button 
+                  className="dropdown-toggle"
+                  onClick={() => setShowDropdown(!showDropdown)}
+                >
+                  Quản lý <FaChevronDown />
+                </button>
+                {showDropdown && (
+                  <div className="dropdown-menu">
+                    <Link to="/my-sales">Đơn bán của tôi</Link>
+                    <Link to="/my-purchases">Đơn mua của tôi</Link>
+                    <Link to="/transaction-history">Lịch sử giao dịch</Link>
+                  </div>
+                )}
+              </div>
               <Link to="/profile">Tài khoản ({userInfo?.userName})</Link>
               <NotificationBell />
               <button onClick={handleLogout} className="auth-button">
