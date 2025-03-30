@@ -12,6 +12,7 @@ import Login from './components/auth/Login';
 import Register from './components/auth/Register';
 import ProtectedRoute from './components/auth/ProtectedRoute';
 import Dashboard from './components/Dashboard/Dashboard';
+import Profile from './components/profile/Profile';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -176,7 +177,7 @@ const AppContent = () => {
                         }).format(userMoney || 0)}
                       </span>
                     </div>
-                    <Link to="/profile" className="menu-item">Xem hồ sơ</Link>
+                    <Link to="/profile" className="menu-item" onClick={() => setShowAccountDropdown(false)}>Xem hồ sơ</Link>
                   </div>
                 )}
               </div>
@@ -216,7 +217,7 @@ const AppContent = () => {
         } />
         <Route path="/profile" element={
           <ProtectedRoute>
-            <div>Profile Page</div>
+            <Profile />
           </ProtectedRoute>
         } />
         <Route path="/transaction/:id" element={
