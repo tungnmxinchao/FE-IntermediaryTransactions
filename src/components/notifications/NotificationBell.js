@@ -6,6 +6,7 @@ import { useODataQuery } from '../../hooks/useODataQuery';
 import { format, parseISO } from 'date-fns';
 import { vi } from 'date-fns/locale';
 import './NotificationBell.css';
+import { toast } from 'react-toastify';
 
 const NotificationBell = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -109,6 +110,20 @@ const NotificationBell = () => {
         throw new Error('No authentication token found');
       }
 
+      // Call API to update message status
+      await fetch(`https://localhost:7054/api/Message?messageId=${notification.id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          seen: true,
+          read: true
+        })
+      });
+
+      // Also update via OData endpoint for consistency
       await fetch(`${API_CONFIG.BASE_URL}/odata/Message(${notification.id})`, {
         method: 'PATCH',
         headers: {
@@ -120,9 +135,12 @@ const NotificationBell = () => {
           Read: true
         })
       });
+
+      // Refresh notifications list
       refetch();
     } catch (error) {
       console.error('Error updating notification status:', error);
+      toast.error('Không thể cập nhật trạng thái thông báo!');
     }
   };
 
