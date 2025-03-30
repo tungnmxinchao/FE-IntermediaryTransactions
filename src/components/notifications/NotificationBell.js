@@ -123,19 +123,6 @@ const NotificationBell = () => {
         })
       });
 
-      // Also update via OData endpoint for consistency
-      await fetch(`${API_CONFIG.BASE_URL}/odata/Message(${notification.id})`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          Seen: true,
-          Read: true
-        })
-      });
-
       // Refresh notifications list
       refetch();
     } catch (error) {
