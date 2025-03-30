@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Table, Tag, Space, Button, Input, Modal, Form, message, Select, Row, Col, DatePicker } from 'antd';
 import { EditOutlined, DeleteOutlined, SearchOutlined, UserAddOutlined, ReloadOutlined } from '@ant-design/icons';
 import { userService } from '../../services/userService';
+import { toast } from 'react-toastify';
 import './Dashboard.css';
 
 const { RangePicker } = DatePicker;
@@ -13,6 +14,7 @@ const UserManagementPage = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [form] = Form.useForm();
   const [editingUser, setEditingUser] = useState(null);
+  const [isCreating, setIsCreating] = useState(false);
   const [filters, setFilters] = useState({
     id: '',
     username: '',
@@ -138,7 +140,14 @@ const UserManagementPage = () => {
       setUsers(response.value);
       setTotal(response['@odata.count']);
     } catch (error) {
-      message.error('Failed to fetch users');
+      toast.error('Failed to fetch users!', {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      });
       console.error('Error fetching users:', error);
     } finally {
       setLoading(false);
@@ -185,18 +194,75 @@ const UserManagementPage = () => {
       okType: 'danger',
       cancelText: 'No',
       onOk() {
-        message.success('User deleted successfully');
+        toast.success('User deleted successfully!', {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+        });
       },
     });
   };
 
-  const handleModalOk = () => {
-    form.validateFields().then((values) => {
-      console.log('Form values:', values);
+  const handleAddNew = () => {
+    setIsCreating(true);
+    form.resetFields();
+    setIsModalVisible(true);
+  };
+
+  const handleModalOk = async () => {
+    try {
+      const values = await form.validateFields();
+      
+      if (isCreating) {
+        // Create new user
+        await userService.createUser({
+          username: values.Username,
+          passwordHash: values.Password,
+          email: values.Email,
+        });
+        toast.success('User created successfully!', {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+        });
+      } else {
+        // Update existing user
+        console.log('Form values:', values);
+        toast.success('User updated successfully!', {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+        });
+      }
+      
       setIsModalVisible(false);
       form.resetFields();
-      message.success('User updated successfully');
-    });
+      fetchUsers(); // Refresh the user list
+    } catch (error) {
+      toast.error(error.response?.data?.message || 'Operation failed!', {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      });
+    }
+  };
+
+  const handleModalCancel = () => {
+    setIsModalVisible(false);
+    form.resetFields();
+    setIsCreating(false);
   };
 
   return (
@@ -207,7 +273,7 @@ const UserManagementPage = () => {
           <Button 
             type="primary" 
             icon={<UserAddOutlined />}
-            onClick={() => setIsModalVisible(true)}
+            onClick={handleAddNew}
           >
             Add New User
           </Button>
@@ -298,13 +364,10 @@ const UserManagementPage = () => {
       </div>
 
       <Modal
-        title={editingUser ? "Edit User" : "Add New User"}
+        title={isCreating ? "Add New User" : "Edit User"}
         open={isModalVisible}
         onOk={handleModalOk}
-        onCancel={() => {
-          setIsModalVisible(false);
-          form.resetFields();
-        }}
+        onCancel={handleModalCancel}
       >
         <Form
           form={form}
@@ -317,6 +380,15 @@ const UserManagementPage = () => {
           >
             <Input />
           </Form.Item>
+          {isCreating && (
+            <Form.Item
+              name="Password"
+              label="Password"
+              rules={[{ required: true, message: 'Please input password!' }]}
+            >
+              <Input.Password />
+            </Form.Item>
+          )}
           <Form.Item
             name="Email"
             label="Email"
@@ -327,26 +399,30 @@ const UserManagementPage = () => {
           >
             <Input />
           </Form.Item>
-          <Form.Item
-            name="RoleId"
-            label="Role"
-            rules={[{ required: true, message: 'Please select role!' }]}
-          >
-            <Select>
-              <Select.Option value={1}>Admin</Select.Option>
-              <Select.Option value={2}>Customer</Select.Option>
-            </Select>
-          </Form.Item>
-          <Form.Item
-            name="IsActive"
-            label="Status"
-            rules={[{ required: true, message: 'Please select status!' }]}
-          >
-            <Select>
-              <Select.Option value={true}>Active</Select.Option>
-              <Select.Option value={false}>Inactive</Select.Option>
-            </Select>
-          </Form.Item>
+          {!isCreating && (
+            <>
+              <Form.Item
+                name="RoleId"
+                label="Role"
+                rules={[{ required: true, message: 'Please select role!' }]}
+              >
+                <Select>
+                  <Select.Option value={1}>Admin</Select.Option>
+                  <Select.Option value={2}>Customer</Select.Option>
+                </Select>
+              </Form.Item>
+              <Form.Item
+                name="IsActive"
+                label="Status"
+                rules={[{ required: true, message: 'Please select status!' }]}
+              >
+                <Select>
+                  <Select.Option value={true}>Active</Select.Option>
+                  <Select.Option value={false}>Inactive</Select.Option>
+                </Select>
+              </Form.Item>
+            </>
+          )}
         </Form>
       </Modal>
     </div>
