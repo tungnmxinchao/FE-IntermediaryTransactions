@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link, Navigate, useNavigate } from 'react-router-dom';
-import { FaSignOutAlt, FaChevronDown } from 'react-icons/fa';
+import { FaSignOutAlt, FaChevronDown, FaUser, FaWallet } from 'react-icons/fa';
 import PublicMarket from './components/public-market/PublicMarket';
 import MySales from './components/my-sales/MySales';
 import MyPurchases from './components/my-purchases/MyPurchases';
@@ -63,13 +63,39 @@ const Home = () => {
 const AppContent = () => {
   const navigate = useNavigate();
   const { isAuthenticated, userInfo, logout } = useAuth();
-  const [showDropdown, setShowDropdown] = useState(false);
+  const [showManagementDropdown, setShowManagementDropdown] = useState(false);
+  const [showAccountDropdown, setShowAccountDropdown] = useState(false);
+  const [userMoney, setUserMoney] = useState(null);
   const dropdownRef = useRef(null);
+
+  const fetchUserMoney = async () => {
+    if (isAuthenticated) {
+      try {
+        const userId = localStorage.getItem('userId');
+        const token = localStorage.getItem('accessToken');
+        const response = await fetch(`https://localhost:7054/api/Users/${userId}`, {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+          },
+        });
+        
+        if (response.ok) {
+          const data = await response.json();
+          if (data.code === 200) {
+            setUserMoney(data.data.money);
+          }
+        }
+      } catch (error) {
+        console.error('Error fetching user money:', error);
+      }
+    }
+  };
 
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setShowDropdown(false);
+        setShowManagementDropdown(false);
+        setShowAccountDropdown(false);
       }
     };
 
@@ -79,9 +105,23 @@ const AppContent = () => {
     };
   }, []);
 
+  const handleAccountDropdownToggle = () => {
+    if (!showAccountDropdown) {
+      fetchUserMoney();
+    }
+    setShowAccountDropdown(!showAccountDropdown);
+    setShowManagementDropdown(false);
+  };
+
+  const handleManagementDropdownToggle = () => {
+    setShowManagementDropdown(!showManagementDropdown);
+    setShowAccountDropdown(false);
+  };
+
   const handleLogout = () => {
     logout();
-    navigate('/home', { replace: true });
+    setShowAccountDropdown(false);
+    navigate('/login', { replace: true });
   };
 
   return (
@@ -99,11 +139,11 @@ const AppContent = () => {
               <div className="dropdown" ref={dropdownRef}>
                 <button 
                   className="dropdown-toggle"
-                  onClick={() => setShowDropdown(!showDropdown)}
+                  onClick={handleManagementDropdownToggle}
                 >
                   Quản lý <FaChevronDown />
                 </button>
-                {showDropdown && (
+                {showManagementDropdown && (
                   <div className="dropdown-menu">
                     <Link to="/my-sales">Đơn bán của tôi</Link>
                     <Link to="/my-purchases">Đơn mua của tôi</Link>
@@ -111,7 +151,36 @@ const AppContent = () => {
                   </div>
                 )}
               </div>
-              <Link to="/profile">Tài khoản ({userInfo?.userName})</Link>
+              <div className="user-account-dropdown">
+                <button 
+                  className="user-account-toggle"
+                  onClick={handleAccountDropdownToggle}
+                >
+                  <FaUser /> {userInfo?.userName} <FaChevronDown />
+                </button>
+                {showAccountDropdown && (
+                  <div className="user-account-menu">
+                    <div className="user-info">
+                      <FaUser className="user-icon" />
+                      <div className="user-details">
+                        <span className="username">{userInfo?.userName}</span>
+                        <span className="user-email">{userInfo?.email}</span>
+                      </div>
+                    </div>
+                    <div className="user-balance">
+                      <FaWallet className="wallet-icon" />
+                      <span className="balance">
+                        {new Intl.NumberFormat('vi-VN', {
+                          style: 'currency',
+                          currency: 'VND'
+                        }).format(userMoney || 0)}
+                      </span>
+                    </div>
+                    <Link to="/profile" className="menu-item">Xem hồ sơ</Link>
+                  </div>
+                )}
+              </div>
+              
               <NotificationBell />
               <button onClick={handleLogout} className="auth-button">
                 <FaSignOutAlt /> Đăng xuất
