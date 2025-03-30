@@ -13,6 +13,8 @@ const TransactionHistoryPage = () => {
   const [loading, setLoading] = useState(false);
   const [transactions, setTransactions] = useState([]);
   const [total, setTotal] = useState(0);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [selectedTransaction, setSelectedTransaction] = useState(null);
   const [filters, setFilters] = useState({
     username: '',
     transactionType: undefined,
@@ -136,6 +138,32 @@ const TransactionHistoryPage = () => {
             onMouseLeave={(e) => {
               e.currentTarget.style.background = 'transparent';
               e.currentTarget.style.color = '#1890ff';
+            }}
+          >
+            Nguồn giao dịch
+          </Button>
+          <Button 
+            type="link"
+            onClick={() => {
+              setSelectedTransaction(record);
+              setIsModalVisible(true);
+            }}
+            style={{
+              color: '#52c41a',
+              padding: '4px 12px',
+              height: 'auto',
+              borderRadius: '4px',
+              border: '1px solid #52c41a',
+              background: 'transparent',
+              transition: 'all 0.3s',
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = '#52c41a';
+              e.currentTarget.style.color = '#fff';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = 'transparent';
+              e.currentTarget.style.color = '#52c41a';
             }}
           >
             Chi tiết
@@ -302,6 +330,92 @@ const TransactionHistoryPage = () => {
           }}
         />
       </div>
+
+      <Modal
+        title="Chi tiết giao dịch"
+        open={isModalVisible}
+        onCancel={() => {
+          setIsModalVisible(false);
+          setSelectedTransaction(null);
+        }}
+        footer={null}
+        width={800}
+      >
+        {selectedTransaction && (
+          <div className="transaction-details">
+            <div className="detail-row">
+              <span className="label">ID:</span>
+              <span className="value">{selectedTransaction.Id}</span>
+            </div>
+            <div className="detail-row">
+              <span className="label">Người dùng:</span>
+              <span className="value">{selectedTransaction.User?.Username}</span>
+            </div>
+            <div className="detail-row">
+              <span className="label">Loại giao dịch:</span>
+              <span className="value">
+                <Tag color={getTransactionTypeColor(selectedTransaction.TransactionType)}>
+                  {getTransactionTypeText(selectedTransaction.TransactionType)}
+                </Tag>
+              </span>
+            </div>
+            <div className="detail-row">
+              <span className="label">Số tiền:</span>
+              <span className="value" style={{
+                color: selectedTransaction.TransactionType === 2 ? 'red' : 'green',
+                fontWeight: 'bold'
+              }}>
+                {selectedTransaction.TransactionType === 2 ? '-' : '+'}
+                {new Intl.NumberFormat('vi-VN', {
+                  style: 'currency',
+                  currency: 'VND'
+                }).format(selectedTransaction.Amount)}
+              </span>
+            </div>
+            <div className="detail-row">
+              <span className="label">Trạng thái:</span>
+              <span className="value">
+                <Tag color={getProcessedStatusColor(selectedTransaction.IsProcessed)}>
+                  {getProcessedStatusText(selectedTransaction.IsProcessed)}
+                </Tag>
+              </span>
+            </div>
+            <div className="detail-row">
+              <span className="label">Ghi chú:</span>
+              <span className="value">{selectedTransaction.Note}</span>
+            </div>
+            <div className="detail-row">
+              <span className="label">Ngày tạo:</span>
+              <span className="value">{new Date(selectedTransaction.CreatedAt).toLocaleString()}</span>
+            </div>
+            <div className="detail-row">
+              <span className="label">Ngày cập nhật:</span>
+              <span className="value">
+                {selectedTransaction.UpdatedAt ? new Date(selectedTransaction.UpdatedAt).toLocaleString() : 'Chưa có dữ liệu'}
+              </span>
+            </div>
+            <div className="detail-row">
+              <span className="label">Nguồn giao dịch:</span>
+              <span className="value">
+                <a 
+                  href={selectedTransaction.OnDoneLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{ color: '#1890ff' }}
+                >
+                  {selectedTransaction.OnDoneLink}
+                </a>
+              </span>
+            </div>
+            {selectedTransaction.Payload && (
+              <div className="detail-row">
+                <span className="label">Thông tin bổ sung:</span>
+                <span className="value">{selectedTransaction.Payload}</span>
+              </div>
+            )}
+          </div>
+        )}
+      </Modal>
     </div>
   );
 };
