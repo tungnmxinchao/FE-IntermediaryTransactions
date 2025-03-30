@@ -53,13 +53,6 @@ const Home = () => {
               </div>
             </Link>
 
-            <Link to="/transaction-history" className="dashboard-card transaction-history">
-              <h2>Lịch sử giao dịch</h2>
-              <div className="card-content">
-                <p>Xem lịch sử các giao dịch của bạn</p>
-                <button className="action-button">Xem lịch sử</button>
-              </div>
-            </Link>
           </>
         )}
       </div>
