@@ -92,22 +92,42 @@
 }
 
 .auth-button {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  background: none;
+  gap: 8px;
+  transition: all 0.3s ease;
+  background-color: #dc3545;
+  color: white;
+}
+
+.profile-button {
+  padding: 8px 16px;
   border: none;
-  color: #4a5568;
-  font-weight: 500;
-  padding: 0.5rem 1rem;
-  border-radius: 0.375rem;
+  border-radius: 4px;
   cursor: pointer;
-  transition: all 0.2s;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.3s ease;
+  background-color: #4299e1;
+  color: white;
+  text-decoration: none;
+}
+
+.profile-button:hover {
+  background-color: #3182ce;
+  transform: translateY(-1px);
 }
 
 .auth-button:hover {
-  color: #4299e1;
-  background-color: #ebf8ff;
+  background-color: #c82333;
+  transform: translateY(-1px);
 }
 
 .auth-link {

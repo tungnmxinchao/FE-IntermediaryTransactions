@@ -177,12 +177,14 @@ const AppContent = () => {
                         }).format(userMoney || 0)}
                       </span>
                     </div>
-                    <Link to="/profile" className="menu-item" onClick={() => setShowAccountDropdown(false)}>Xem hồ sơ</Link>
                   </div>
                 )}
               </div>
               
               <NotificationBell />
+              <Link to="/profile" className="profile-button">
+                <FaUser /> Xem hồ sơ
+              </Link>
               <button onClick={handleLogout} className="auth-button">
                 <FaSignOutAlt /> Đăng xuất
               </button>
