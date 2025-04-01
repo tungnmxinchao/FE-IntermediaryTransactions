@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, Row, Col, Statistic, Menu } from 'antd';
 import { 
   UserOutlined, 
@@ -7,9 +7,12 @@ import {
   DashboardOutlined,
   TeamOutlined,
   OrderedListOutlined,
-  HistoryOutlined
+  HistoryOutlined,
+  DollarOutlined,
+  WalletOutlined
 } from '@ant-design/icons';
 import { useNavigate, Routes, Route, Navigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import UserManagementPage from './UserManagementPage';
 import OrderManagementPage from './OrderManagementPage';
 import TransactionHistoryPage from './TransactionHistoryPage';
@@ -18,6 +21,36 @@ import './Dashboard.css';
 const Dashboard = () => {
   const navigate = useNavigate();
   const [selectedKey, setSelectedKey] = useState('overview');
+  const [profitData, setProfitData] = useState({
+    totalOrder: 0,
+    profitOfCreateOrder: 0,
+    profitOfFeeOrder: 0
+  });
+
+  useEffect(() => {
+    const fetchProfitData = async () => {
+      try {
+        const token = localStorage.getItem('accessToken');
+        const response = await fetch('https://localhost:7054/Admin/get-profit', {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+          },
+        });
+        
+        if (response.ok) {
+          const data = await response.json();
+          setProfitData(data);
+        } else {
+          toast.error('Không thể tải dữ liệu lợi nhuận');
+        }
+      } catch (error) {
+        console.error('Error fetching profit data:', error);
+        toast.error('Đã xảy ra lỗi khi tải dữ liệu');
+      }
+    };
+
+    fetchProfitData();
+  }, []);
 
   const menuItems = [
     {
@@ -47,6 +80,13 @@ const Dashboard = () => {
     navigate(`/dashboard/${key}`);
   };
 
+  const formatCurrency = (value) => {
+    return new Intl.NumberFormat('vi-VN', {
+      style: 'currency',
+      currency: 'VND'
+    }).format(value);
+  };
+
   const Overview = () => (
     <>
       <h1 className="dashboard-title">Dashboard Overview</h1>
@@ -56,17 +96,8 @@ const Dashboard = () => {
         <Col xs={24} sm={8}>
           <Card>
             <Statistic
-              title="Total Users"
-              value={1128}
-              prefix={<UserOutlined />}
-            />
-          </Card>
-        </Col>
-        <Col xs={24} sm={8}>
-          <Card>
-            <Statistic
-              title="Total Orders"
-              value={93}
+              title="Tổng số đơn hàng"
+              value={profitData.totalOrder}
               prefix={<ShoppingCartOutlined />}
             />
           </Card>
@@ -74,9 +105,20 @@ const Dashboard = () => {
         <Col xs={24} sm={8}>
           <Card>
             <Statistic
-              title="Total Transactions"
-              value={256}
-              prefix={<TransactionOutlined />}
+              title="Lợi nhuận từ tạo đơn"
+              value={profitData.profitOfCreateOrder}
+              prefix={<DollarOutlined />}
+              formatter={(value) => formatCurrency(value)}
+            />
+          </Card>
+        </Col>
+        <Col xs={24} sm={8}>
+          <Card>
+            <Statistic
+              title="Lợi nhuận từ phí giao dịch"
+              value={profitData.profitOfFeeOrder}
+              prefix={<WalletOutlined />}
+              formatter={(value) => formatCurrency(value)}
             />
           </Card>
         </Col>
