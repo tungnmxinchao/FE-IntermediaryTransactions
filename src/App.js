@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link, Navigate, useNavigate } from 'react-router-dom';
-import { FaSignOutAlt, FaChevronDown, FaUser, FaWallet, FaEye } from 'react-icons/fa';
+import { FaSignOutAlt, FaChevronDown, FaUser, FaWallet, FaEye, FaMoneyBillWave } from 'react-icons/fa';
 import PublicMarket from './components/public-market/PublicMarket';
 import MySales from './components/my-sales/MySales';
 import MyPurchases from './components/my-purchases/MyPurchases';
@@ -13,6 +13,7 @@ import Register from './components/auth/Register';
 import ProtectedRoute from './components/auth/ProtectedRoute';
 import Dashboard from './components/Dashboard/Dashboard';
 import Profile from './components/profile/Profile';
+import Deposit from './components/deposit/Deposit';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -149,6 +150,9 @@ const AppContent = () => {
                     <Link to="/my-sales">Đơn bán của tôi</Link>
                     <Link to="/my-purchases">Đơn mua của tôi</Link>
                     <Link to="/transaction-history">Lịch sử giao dịch</Link>
+                    <Link to="/deposit">
+                      <FaMoneyBillWave /> Nạp tiền
+                    </Link>
                   </div>
                 )}
               </div>
@@ -183,6 +187,9 @@ const AppContent = () => {
               
               <Link to="/profile" className="nav-links a">
                 <FaEye /> Xem hồ sơ
+              </Link>
+              <Link to="/deposit" className="nav-links a">
+                <FaMoneyBillWave /> Nạp tiền
               </Link>
               <NotificationBell />
               <button onClick={handleLogout} className="auth-button">
@@ -220,6 +227,11 @@ const AppContent = () => {
         <Route path="/profile" element={
           <ProtectedRoute>
             <Profile />
+          </ProtectedRoute>
+        } />
+        <Route path="/deposit" element={
+          <ProtectedRoute>
+            <Deposit />
           </ProtectedRoute>
         } />
         <Route path="/transaction/:id" element={
