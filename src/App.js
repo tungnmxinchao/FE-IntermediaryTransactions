@@ -188,9 +188,6 @@ const AppContent = () => {
               <Link to="/profile" className="nav-links a">
                 <FaEye /> Xem hồ sơ
               </Link>
-              <Link to="/deposit" className="nav-links a">
-                <FaMoneyBillWave /> Nạp tiền
-              </Link>
               <NotificationBell />
               <button onClick={handleLogout} className="auth-button">
                 <FaSignOutAlt /> Đăng xuất
