@@ -1,0 +1,256 @@
+.dashboard-layout {
+  display: flex;
+  min-height: 100vh;
+  background-color: #f0f2f5;
+}
+
+.dashboard-sidebar {
+  width: 250px;
+  background: #fff;
+  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.06);
+  position: fixed;
+  height: 100vh;
+  overflow-y: auto;
+  z-index: 1000;
+}
+
+.sidebar-header {
+  padding: 20px;
+  text-align: center;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.sidebar-header h2 {
+  margin: 0;
+  color: #2d3748;
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.dashboard-menu {
+  border-right: none;
+}
+
+.dashboard-menu .ant-menu-item {
+  margin: 4px 0;
+  padding: 0 24px;
+  height: 48px;
+  line-height: 48px;
+  display: flex;
+  align-items: center;
+}
+
+.dashboard-menu .ant-menu-item-icon {
+  font-size: 18px;
+  margin-right: 10px;
+}
+
+.dashboard-menu .ant-menu-item-selected {
+  background-color: #ebf8ff;
+  color: #4299e1;
+}
+
+.dashboard-menu .ant-menu-item:hover {
+  color: #4299e1;
+}
+
+.dashboard-content {
+  flex: 1;
+  margin-left: 250px;
+  padding: 24px;
+  background-color: #f0f2f5;
+}
+
+.dashboard-title {
+  margin-bottom: 24px;
+  color: #1a1a1a;
+  font-size: 28px;
+  font-weight: 600;
+  position: relative;
+  padding-bottom: 12px;
+}
+
+.dashboard-title::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 60px;
+  height: 4px;
+  background: linear-gradient(90deg, #4299e1, #63b3ed);
+  border-radius: 2px;
+}
+
+.statistics-row {
+  margin-bottom: 24px;
+}
+
+.statistics-row .ant-card {
+  border-radius: 12px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  transition: all 0.3s ease;
+  border: none;
+  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+  overflow: hidden;
+}
+
+.statistics-row .ant-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #4299e1, #63b3ed);
+}
+
+.statistics-row .ant-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+.statistics-row .ant-statistic-title {
+  color: #4a5568;
+  font-size: 16px;
+  margin-bottom: 8px;
+}
+
+.statistics-row .ant-statistic-content {
+  color: #2d3748;
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.statistics-row .anticon {
+  font-size: 24px;
+  color: #4299e1;
+  margin-right: 8px;
+}
+
+.content-row {
+  margin-top: 24px;
+}
+
+.dashboard-card {
+  border-radius: 12px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  height: 100%;
+  border: none;
+  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.dashboard-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+.quick-action {
+  display: flex;
+  align-items: center;
+  padding: 16px;
+}
+
+.action-icon {
+  font-size: 32px;
+  color: #4299e1;
+  margin-right: 16px;
+}
+
+.action-content h3 {
+  margin: 0 0 8px 0;
+  color: #2d3748;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.action-content p {
+  margin: 0;
+  color: #4a5568;
+  font-size: 14px;
+}
+
+/* Page Header Styles */
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.header-actions {
+  display: flex;
+  gap: 16px;
+}
+
+/* Content Card Styles */
+.content-card {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  padding: 24px;
+}
+
+/* Detail Styles */
+.detail-row {
+  display: flex;
+  margin-bottom: 16px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.detail-row:last-child {
+  margin-bottom: 0;
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+.detail-row .label {
+  width: 150px;
+  color: #4a5568;
+  font-weight: 500;
+}
+
+.detail-row .value {
+  flex: 1;
+  color: #2d3748;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .dashboard-layout {
+    flex-direction: column;
+  }
+
+  .dashboard-sidebar {
+    width: 100%;
+    height: auto;
+    position: relative;
+  }
+
+  .dashboard-content {
+    margin-left: 0;
+    padding: 16px;
+  }
+
+  .dashboard-title {
+    font-size: 24px;
+    margin-bottom: 16px;
+  }
+
+  .statistics-row .ant-card {
+    margin-bottom: 16px;
+  }
+
+  .header-actions {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .header-actions .ant-input,
+  .header-actions .ant-select,
+  .header-actions .ant-picker {
+    width: 100% !important;
+  }
+} 

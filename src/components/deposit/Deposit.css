@@ -1,0 +1,118 @@
+.deposit-container {
+  min-height: calc(100vh - 64px);
+  padding: 2rem;
+  background-color: #f7fafc;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.deposit-card {
+  background: white;
+  border-radius: 8px;
+  padding: 2rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 500px;
+}
+
+.deposit-card h1 {
+  color: #2d3748;
+  margin-bottom: 0.5rem;
+  font-size: 1.875rem;
+}
+
+.deposit-description {
+  color: #718096;
+  margin-bottom: 2rem;
+  font-size: 1rem;
+}
+
+.deposit-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.form-group label {
+  color: #4a5568;
+  font-weight: 500;
+}
+
+.amount-input {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.amount-input input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  padding-right: 4rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  font-size: 1rem;
+  color: #2d3748;
+  transition: border-color 0.2s;
+}
+
+.amount-input input:focus {
+  outline: none;
+  border-color: #4299e1;
+  box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.1);
+}
+
+.currency {
+  position: absolute;
+  right: 1rem;
+  color: #718096;
+  font-weight: 500;
+}
+
+.amount-hint {
+  color: #718096;
+  font-size: 0.875rem;
+}
+
+.deposit-button {
+  background-color: #4299e1;
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.deposit-button:hover {
+  background-color: #3182ce;
+  transform: translateY(-1px);
+}
+
+.deposit-button:disabled {
+  background-color: #a0aec0;
+  cursor: not-allowed;
+  transform: none;
+}
+
+@media (max-width: 640px) {
+  .deposit-container {
+    padding: 1rem;
+  }
+
+  .deposit-card {
+    padding: 1.5rem;
+  }
+} 

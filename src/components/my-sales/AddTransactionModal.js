@@ -9,7 +9,7 @@ const AddTransactionModal = ({ onClose, onSubmit }) => {
     price: '',
     feeBearer: 'buyer',
     description: '',
-    contactMethod: '',
+    contact: '',
     hiddenContent: '',
     isPublic: true
   });
@@ -118,12 +118,12 @@ const AddTransactionModal = ({ onClose, onSubmit }) => {
           </div>
 
           <div className="form-group">
-            <label htmlFor="contactMethod">Phương thức liên hệ *</label>
+            <label htmlFor="contact">Phương thức liên hệ *</label>
             <input
               type="text"
-              id="contactMethod"
-              name="contactMethod"
-              value={formData.contactMethod}
+              id="contact"
+              name="contact"
+              value={formData.contact}
               onChange={handleChange}
               required
             />

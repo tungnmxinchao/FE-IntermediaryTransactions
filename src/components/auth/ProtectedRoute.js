@@ -7,7 +7,11 @@ const ProtectedRoute = ({ children }) => {
     const isAuthenticated = AuthService.isAuthenticated();
 
     if (!isAuthenticated) {
-        toast.error('Vui lòng đăng nhập để tiếp tục');
+        // Only show error if trying to access protected route directly
+        // and not during logout/login process
+        if (!location.state?.from && location.pathname !== '/home') {
+            toast.error('Vui lòng đăng nhập để tiếp tục');
+        }
         return <Navigate to="/login" state={{ from: location }} replace />;
     }
 

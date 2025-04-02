@@ -3,11 +3,11 @@ import './SearchBar.css';
 
 const SearchBar = ({ onSearch }) => {
   const [searchParams, setSearchParams] = React.useState({
-    code: '',
     topic: '',
     minPrice: '',
     maxPrice: '',
     feeBearer: '',
+    buyer: '',
     seller: '',
     createdAt: ''
   });
@@ -22,23 +22,33 @@ const SearchBar = ({ onSearch }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSearch(searchParams);
+    // Trim all text inputs before submitting
+    const trimmedParams = Object.keys(searchParams).reduce((acc, key) => {
+      acc[key] = typeof searchParams[key] === 'string' 
+        ? searchParams[key].trim() 
+        : searchParams[key];
+      return acc;
+    }, {});
+    onSearch(trimmedParams);
+  };
+
+  const handleReset = () => {
+    const resetParams = {
+      topic: '',
+      minPrice: '',
+      maxPrice: '',
+      feeBearer: '',
+      buyer: '',
+      seller: '',
+      createdAt: ''
+    };
+    setSearchParams(resetParams);
+    onSearch(resetParams);
   };
 
   return (
     <form className="search-bar" onSubmit={handleSubmit}>
       <div className="search-grid">
-        <div className="search-field">
-          <label htmlFor="code">Mã trung gian</label>
-          <input
-            type="text"
-            id="code"
-            name="code"
-            value={searchParams.code}
-            onChange={handleChange}
-            placeholder="Nhập mã trung gian"
-          />
-        </div>
         <div className="search-field">
           <label htmlFor="topic">Chủ đề</label>
           <input
@@ -50,7 +60,7 @@ const SearchBar = ({ onSearch }) => {
             placeholder="Nhập chủ đề"
           />
         </div>
-        <div className="search-field price-range">
+        <div className="search-field">
           <label>Khoảng giá</label>
           <div className="price-inputs">
             <input
@@ -97,6 +107,17 @@ const SearchBar = ({ onSearch }) => {
           />
         </div>
         <div className="search-field">
+          <label htmlFor="buyer">Người mua</label>
+          <input
+            type="text"
+            id="buyer"
+            name="buyer"
+            value={searchParams.buyer}
+            onChange={handleChange}
+            placeholder="Nhập tên người mua"
+          />
+        </div>
+        <div className="search-field">
           <label htmlFor="createdAt">Thời gian tạo</label>
           <input
             type="date"
@@ -107,9 +128,14 @@ const SearchBar = ({ onSearch }) => {
           />
         </div>
       </div>
-      <button type="submit" className="search-button">
-        Tìm kiếm
-      </button>
+      <div className="search-buttons">
+        <button type="submit" className="search-button">
+          Tìm kiếm
+        </button>
+        <button type="button" className="reset-button" onClick={handleReset}>
+          Đặt lại
+        </button>
+      </div>
     </form>
   );
 };

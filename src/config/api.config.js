@@ -1,15 +1,19 @@
 export const API_CONFIG = {
-    BASE_URL: 'https://localhost:7054/api',
+    BASE_URL: 'https://localhost:7054',
     ENDPOINTS: {
         AUTH: {
-            LOGIN: '/Users/login',
-            REGISTER: '/Users/register',
-            REFRESH_TOKEN: '/Users/refresh-token',
+            LOGIN: '/api/Users/login',
+            REGISTER: '/api/Users/register',
+            REFRESH_TOKEN: '/api/Users/refresh-token',
         },
-        TRANSACTIONS: {
-            PUBLIC: '/Transactions/public',
-            MY_SALES: '/Transactions/my-sales',
-            MY_PURCHASES: '/Transactions/my-purchases',
+        ODATA: {
+            ORDER: '/odata/Order',
+            USER: '/odata/User',
+            MY_ORDER: '/odata/MyOrder',
+            MY_PURCHASES: '/odata/MyPurchase'
+        },
+        ORDER_USER: {
+            CREATE_ORDER: '/api/Order'
         }
     }
 }; 

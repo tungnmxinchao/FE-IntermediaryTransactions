@@ -9,8 +9,9 @@ const MySalesTable = ({ transactions }) => {
           <tr>
             <th>Mã trung gian</th>
             <th>Chủ đề</th>
+            <th>Trạng thái</th>
             <th>Người mua</th>
-            <th>Phương thức</th>
+            <th>Phương thức liên hệ</th>
             <th>Giá tiền</th>
             <th>Bên chịu phí</th>
             <th>Phí trung gian</th>
@@ -23,8 +24,13 @@ const MySalesTable = ({ transactions }) => {
             <tr key={transaction.id}>
               <td>{transaction.code}</td>
               <td>{transaction.topic}</td>
+              <td>
+                <span className="status-badge" data-status={transaction.statusId}>
+                  {transaction.status}
+                </span>
+              </td>
               <td>{transaction.buyer}</td>
-              <td>{transaction.method}</td>
+              <td>{transaction.contact}</td>
               <td>{transaction.price.toLocaleString('vi-VN')} VNĐ</td>
               <td>{transaction.feeBearer}</td>
               <td>{transaction.fee.toLocaleString('vi-VN')} VNĐ</td>

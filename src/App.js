@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link, Navigate, useNavigate } from 'react-router-dom';
-import { FaSignOutAlt } from 'react-icons/fa';
+import { FaSignOutAlt, FaChevronDown, FaUser, FaWallet, FaEye, FaMoneyBillWave } from 'react-icons/fa';
 import PublicMarket from './components/public-market/PublicMarket';
 import MySales from './components/my-sales/MySales';
 import MyPurchases from './components/my-purchases/MyPurchases';
@@ -11,8 +11,11 @@ import TransactionHistory from './components/transaction-history/TransactionHist
 import Login from './components/auth/Login';
 import Register from './components/auth/Register';
 import ProtectedRoute from './components/auth/ProtectedRoute';
+import Dashboard from './components/Dashboard/Dashboard';
+import Profile from './components/profile/Profile';
+import Deposit from './components/deposit/Deposit';
 import { AuthProvider, useAuth } from './context/AuthContext';
-import { ToastContainer } from 'react-toastify';
+import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import './App.css';
 
@@ -52,13 +55,6 @@ const Home = () => {
               </div>
             </Link>
 
-            <Link to="/transaction-history" className="dashboard-card transaction-history">
-              <h2>Lịch sử giao dịch</h2>
-              <div className="card-content">
-                <p>Xem lịch sử các giao dịch của bạn</p>
-                <button className="action-button">Xem lịch sử</button>
-              </div>
-            </Link>
           </>
         )}
       </div>
@@ -69,10 +65,65 @@ const Home = () => {
 const AppContent = () => {
   const navigate = useNavigate();
   const { isAuthenticated, userInfo, logout } = useAuth();
+  const [showManagementDropdown, setShowManagementDropdown] = useState(false);
+  const [showAccountDropdown, setShowAccountDropdown] = useState(false);
+  const [userMoney, setUserMoney] = useState(null);
+  const dropdownRef = useRef(null);
+
+  const fetchUserMoney = async () => {
+    if (isAuthenticated) {
+      try {
+        const userId = localStorage.getItem('userId');
+        const token = localStorage.getItem('accessToken');
+        const response = await fetch(`https://localhost:7054/api/Users/${userId}`, {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+          },
+        });
+        
+        if (response.ok) {
+          const data = await response.json();
+          if (data.code === 200) {
+            setUserMoney(data.data.money);
+          }
+        }
+      } catch (error) {
+        console.error('Error fetching user money:', error);
+      }
+    }
+  };
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setShowManagementDropdown(false);
+        setShowAccountDropdown(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
+  const handleAccountDropdownToggle = () => {
+    if (!showAccountDropdown) {
+      fetchUserMoney();
+    }
+    setShowAccountDropdown(!showAccountDropdown);
+    setShowManagementDropdown(false);
+  };
+
+  const handleManagementDropdownToggle = () => {
+    setShowManagementDropdown(!showManagementDropdown);
+    setShowAccountDropdown(false);
+  };
 
   const handleLogout = () => {
     logout();
-    navigate('/home');
+    setShowAccountDropdown(false);
+    navigate('/login', { replace: true });
   };
 
   return (
@@ -84,10 +135,59 @@ const AppContent = () => {
           <Link to="/public-market">Chợ công khai</Link>
           {isAuthenticated ? (
             <>
-              <Link to="/my-sales">Đơn bán của tôi</Link>
-              <Link to="/my-purchases">Đơn mua của tôi</Link>
-              <Link to="/transaction-history">Lịch sử giao dịch</Link>
-              <Link to="/profile">Tài khoản ({userInfo?.userName})</Link>
+              {userInfo?.userRole === 'Admin' && (
+                <Link to="/dashboard" className="admin-link">Dashboard</Link>
+              )}
+              <div className="dropdown" ref={dropdownRef}>
+                <button 
+                  className="dropdown-toggle"
+                  onClick={handleManagementDropdownToggle}
+                >
+                  Quản lý <FaChevronDown />
+                </button>
+                {showManagementDropdown && (
+                  <div className="dropdown-menu">
+                    <Link to="/my-sales">Đơn bán của tôi</Link>
+                    <Link to="/my-purchases">Đơn mua của tôi</Link>
+                    <Link to="/transaction-history">Lịch sử giao dịch</Link>
+                    <Link to="/deposit">
+                      <FaMoneyBillWave /> Nạp tiền
+                    </Link>
+                  </div>
+                )}
+              </div>
+              <div className="user-account-dropdown">
+                <button 
+                  className="user-account-toggle"
+                  onClick={handleAccountDropdownToggle}
+                >
+                  <FaUser /> {userInfo?.userName} <FaChevronDown />
+                </button>
+                {showAccountDropdown && (
+                  <div className="user-account-menu">
+                    <div className="user-info">
+                      <FaUser className="user-icon" />
+                      <div className="user-details">
+                        <span className="username">{userInfo?.userName}</span>
+                        <span className="user-email">{userInfo?.email}</span>
+                      </div>
+                    </div>
+                    <div className="user-balance">
+                      <FaWallet className="wallet-icon" />
+                      <span className="balance">
+                        {new Intl.NumberFormat('vi-VN', {
+                          style: 'currency',
+                          currency: 'VND'
+                        }).format(userMoney || 0)}
+                      </span>
+                    </div>
+                  </div>
+                )}
+              </div>
+              
+              <Link to="/profile" className="nav-links a">
+                <FaEye /> Xem hồ sơ
+              </Link>
               <NotificationBell />
               <button onClick={handleLogout} className="auth-button">
                 <FaSignOutAlt /> Đăng xuất
@@ -123,7 +223,12 @@ const AppContent = () => {
         } />
         <Route path="/profile" element={
           <ProtectedRoute>
-            <div>Profile Page</div>
+            <Profile />
+          </ProtectedRoute>
+        } />
+        <Route path="/deposit" element={
+          <ProtectedRoute>
+            <Deposit />
           </ProtectedRoute>
         } />
         <Route path="/transaction/:id" element={
@@ -133,6 +238,11 @@ const AppContent = () => {
         } />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/dashboard/*" element={
+          <ProtectedRoute>
+            <Dashboard />
+          </ProtectedRoute>
+        } />
       </Routes>
       <Footer />
       <ToastContainer

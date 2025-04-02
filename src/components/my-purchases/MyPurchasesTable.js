@@ -9,6 +9,7 @@ const MyPurchasesTable = ({ transactions }) => {
           <tr>
             <th>Mã trung gian</th>
             <th>Chủ đề</th>
+            <th>Trạng thái</th>
             <th>Người bán</th>
             <th>Phương thức</th>
             <th>Giá tiền</th>
@@ -23,6 +24,11 @@ const MyPurchasesTable = ({ transactions }) => {
             <tr key={transaction.id}>
               <td>{transaction.code}</td>
               <td>{transaction.topic}</td>
+              <td>
+                <span className="status-badge" data-status={transaction.statusId}>
+                  {transaction.status}
+                </span>
+              </td>
               <td>{transaction.seller}</td>
               <td>{transaction.method}</td>
               <td>{transaction.price.toLocaleString('vi-VN')} VNĐ</td>

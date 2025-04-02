@@ -94,4 +94,84 @@
 
 .table-container::-webkit-scrollbar-thumb:hover {
   background: #a0aec0;
+}
+
+/* Định nghĩa width cho cột status */
+.my-purchases-table th:nth-child(3),
+.my-purchases-table td:nth-child(3) { width: 120px; } /* Trạng thái */
+
+/* Đảm bảo ô chứa status badge luôn hiển thị đầy đủ */
+.my-purchases-table td:nth-child(3) {
+  white-space: normal;
+  text-align: center;
+  padding: 0.5rem;
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 0.25rem 0.5rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-align: center;
+  width: fit-content;
+  min-width: 100px;
+  max-width: 170px;
+  white-space: normal;
+  word-wrap: break-word;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+/* Đảm bảo status badge không bị che khi hover */
+.my-purchases-table tr:hover .status-badge {
+  z-index: 3;
+}
+
+/* Status 1: Đơn hàng đã sẵn sàng giao dịch */
+.status-badge[data-status="1"] {
+  background-color: #dcfce7;
+  color: #166534;
+}
+
+/* Status 2: Đơn hàng đã bị hủy */
+.status-badge[data-status="2"] {
+  background-color: #fee2e2;
+  color: #991b1b;
+}
+
+/* Status 3: Bên mua đang kiểm tra hàng */
+.status-badge[data-status="3"] {
+  background-color: #fef3c7;
+  color: #92400e;
+}
+
+/* Status 4: Đơn hàng đã hoàn thành */
+.status-badge[data-status="4"] {
+  background-color: #dbeafe;
+  color: #1e40af;
+}
+
+/* Status 5: Bên mua khiếu nại sản phẩm */
+.status-badge[data-status="5"] {
+  background-color: #fae8ff;
+  color: #86198f;
+}
+
+/* Status 6: Bên bán đánh dấu khiếu nại không đúng */
+.status-badge[data-status="6"] {
+  background-color: #f0fdf4;
+  color: #166534;
+}
+
+/* Status 7: Yêu cầu quản trị viên trung gian */
+.status-badge[data-status="7"] {
+  background-color: #fef9c3;
+  color: #854d0e;
+}
+
+/* Status 8: Chờ bên mua xác nhận khiếu nại không đúng */
+.status-badge[data-status="8"] {
+  background-color: #e0f2fe;
+  color: #075985;
 } 
