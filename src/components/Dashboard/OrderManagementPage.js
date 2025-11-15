@@ -179,7 +179,7 @@ const OrderManagementPage = () => {
     try {
       setLoading(true);
       const filterString = buildFilterString();
-      const response = await axios.get('https://localhost:7054/odata/AdminViewOrders', {
+      const response = await axios.get('https://localhost:44316/odata/AdminViewOrders', {
         params: {
           $expand: 'CreatedByUser,Customer',
           $filter: filterString,
@@ -256,7 +256,7 @@ const OrderManagementPage = () => {
   const handleResolveDispute = async (isSellerCorrect) => {
     try {
       const response = await axios.post(
-        `https://localhost:7054/api/Order/${selectedOrder.Id}/resolve-dispute`,
+        `https://localhost:44316/api/Order/${selectedOrder.Id}/resolve-dispute`,
         {
           orderId: selectedOrder.Id,
           isSellerCorrect: isSellerCorrect

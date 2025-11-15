@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { FaUser, FaLock, FaEnvelope, FaArrowRight } from 'react-icons/fa';
+import { toast } from 'react-toastify';
+import { AuthService } from '../../services/auth.service';
 import './Auth.css';
 
 const Register = () => {
@@ -21,19 +23,33 @@ const Register = () => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    // Validate passwords match
+
     if (formData.password !== formData.confirmPassword) {
       setError('Mật khẩu xác nhận không khớp');
       return;
     }
 
-    // TODO: Implement actual registration logic here
-    console.log('Registration attempt:', formData);
-    // For demo, just navigate to home
-    navigate('/');
+    try {
+      const response = await AuthService.register(
+        formData.username,
+        formData.email,
+        formData.password
+      );
+
+      toast.success('Đăng ký thành công!');
+      console.log('Register response:', response);
+
+      navigate('/login');
+    } catch (err) {
+      const errorMessage =
+        err?.message ||
+        err?.error ||
+        'Đăng ký thất bại. Vui lòng thử lại.';
+      setError(errorMessage);
+      toast.error(errorMessage);
+    }
   };
 
   return (
@@ -130,4 +146,4 @@ const Register = () => {
   );
 };
 
-export default Register; 
+export default Register;

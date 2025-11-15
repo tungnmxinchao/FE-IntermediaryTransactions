@@ -199,7 +199,7 @@ const TransactionHistoryPage = () => {
     try {
       setLoading(true);
       const filterString = buildFilterString();
-      const response = await axios.get('https://localhost:7054/odata/AdminViewTransactions', {
+      const response = await axios.get('https://localhost:44316/odata/AdminViewTransactions', {
         params: {
           $expand: 'User',
           $filter: filterString,
@@ -263,7 +263,7 @@ const TransactionHistoryPage = () => {
   const handleUpdateStatus = async (id, isProcessed) => {
     try {
       setUpdating(true);
-      await axios.put(`https://localhost:7054/api/TransactionHistory/${id}/${isProcessed}`, null, {
+      await axios.put(`https://localhost:44316/api/TransactionHistory/${id}/${isProcessed}`, null, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
         },

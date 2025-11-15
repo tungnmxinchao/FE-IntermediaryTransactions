@@ -34,7 +34,7 @@ const Login = () => {
         navigate('/home');
       }
     } catch (err) {
-      const errorMessage = err.message || 'An error occurred during login';
+      const errorMessage = err.message || 'Sai toài khoản hoặc mật khẩu';
       setError(errorMessage);
       toast.error(errorMessage);
     }

@@ -31,7 +31,7 @@ const Dashboard = () => {
     const fetchProfitData = async () => {
       try {
         const token = localStorage.getItem('accessToken');
-        const response = await fetch('https://localhost:7054/Admin/get-profit', {
+        const response = await fetch('https://localhost:44316/Admin/get-profit', {
           headers: {
             'Authorization': `Bearer ${token}`,
           },
