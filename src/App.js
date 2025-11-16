@@ -75,7 +75,7 @@ const AppContent = () => {
       try {
         const userId = localStorage.getItem('userId');
         const token = localStorage.getItem('accessToken');
-        const response = await fetch(`https://localhost:7054/api/Users/${userId}`, {
+        const response = await fetch(`https://localhost:44316/api/Users/${userId}`, {
           headers: {
             'Authorization': `Bearer ${token}`,
           },

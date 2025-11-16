@@ -21,7 +21,7 @@ const Profile = () => {
           return;
         }
 
-        const response = await fetch(`https://localhost:7054/api/Users/${userId}`, {
+        const response = await fetch(`https://localhost:44316/api/Users/${userId}`, {
           headers: {
             'Authorization': `Bearer ${token}`,
           },

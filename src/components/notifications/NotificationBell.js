@@ -111,7 +111,7 @@ const NotificationBell = () => {
       }
 
       // Call API to update message status
-      await fetch(`https://localhost:7054/api/Message?messageId=${notification.id}`, {
+      await fetch(`https://localhost:44316/api/Message?messageId=${notification.id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

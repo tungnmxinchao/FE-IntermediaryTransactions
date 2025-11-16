@@ -22,7 +22,7 @@ const Deposit = () => {
         return;
       }
 
-      const response = await fetch('https://localhost:7054/api/Deposit', {
+      const response = await fetch('https://localhost:44316/api/Deposit', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

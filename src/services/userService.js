@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const BASE_URL = 'https://localhost:7054';
+const BASE_URL = 'https://localhost:44316';
 const ODATA_URL = `${BASE_URL}/odata`;
 const API_URL = `${BASE_URL}/api`;
 

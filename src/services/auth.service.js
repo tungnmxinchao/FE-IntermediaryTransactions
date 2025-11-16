@@ -39,6 +39,20 @@ export const AuthService = {
         }
     },
 
+    register: async (username, email, password) => {
+        try {
+            const response = await axiosInstance.post('/api/Users', {
+                username: username,
+                passwordHash: password,
+                email: email
+            });
+
+            return response.data;
+        } catch (error) {
+            throw error.response?.data || error.message;
+        }
+    },
+
     logout: () => {
         localStorage.removeItem(STORAGE_KEYS.ACCESS_TOKEN);
         localStorage.removeItem(STORAGE_KEYS.REFRESH_TOKEN);

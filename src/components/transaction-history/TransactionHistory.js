@@ -8,28 +8,35 @@ import './TransactionHistory.css';
 
 const TransactionHistory = () => {
   const navigate = useNavigate();
+
+  // State input
   const [searchTerm, setSearchTerm] = useState('');
   const [minAmount, setMinAmount] = useState('');
   const [maxAmount, setMaxAmount] = useState('');
   const [status, setStatus] = useState('all');
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
+
+  // State thực sự dùng để query
+  const [filters, setFilters] = useState({
+    searchTerm: '',
+    minAmount: '',
+    maxAmount: '',
+    status: 'all',
+    startDate: '',
+    endDate: ''
+  });
+
   const [selectedTransaction, setSelectedTransaction] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [data, setData] = useState({ value: [], '@odata.count': 0 });
+
   const pageSize = PAGINATION_CONFIG.DEFAULT_PAGE_SIZE;
 
   const buildQueryParams = () => {
-    const filter = TransactionHistoryService.buildFilterQuery({
-      searchTerm,
-      minAmount,
-      maxAmount,
-      status,
-      startDate,
-      endDate
-    });
+    const filter = TransactionHistoryService.buildFilterQuery(filters);
 
     return {
       skip: (currentPage - 1) * pageSize,
@@ -52,14 +59,23 @@ const TransactionHistory = () => {
     }
   };
 
+  // Chỉ gọi khi currentPage hoặc filters thay đổi
   useEffect(() => {
     fetchData();
-  }, [currentPage, searchTerm, minAmount, maxAmount, status, startDate, endDate]);
+  }, [currentPage, filters]);
 
   const transactions = data?.value || [];
   const totalCount = parseInt(data?.['@odata.count']) || 0;
 
   const handleSearch = () => {
+    setFilters({
+      searchTerm,
+      minAmount,
+      maxAmount,
+      status,
+      startDate,
+      endDate
+    });
     setCurrentPage(1);
   };
 
@@ -70,6 +86,14 @@ const TransactionHistory = () => {
     setStatus('all');
     setStartDate('');
     setEndDate('');
+    setFilters({
+      searchTerm: '',
+      minAmount: '',
+      maxAmount: '',
+      status: 'all',
+      startDate: '',
+      endDate: ''
+    });
     setCurrentPage(1);
   };
 
@@ -96,7 +120,7 @@ const TransactionHistory = () => {
   }
 
   if (error) {
-    return <div className="error">{error.message}</div>;
+    return <div className="error">{error}</div>;
   }
 
   return (
@@ -199,8 +223,8 @@ const TransactionHistory = () => {
                 <td title={transaction.Note}>{transaction.Note}</td>
                 <td>{TransactionHistoryService.formatDate(transaction.CreatedAt)}</td>
                 <td>
-                  <button 
-                    className="view-details-btn" 
+                  <button
+                    className="view-details-btn"
                     onClick={() => handleViewDetails(transaction)}
                   >
                     <FaEye /> Chi tiết
@@ -252,7 +276,7 @@ const TransactionHistory = () => {
                 <span>{selectedTransaction.Note}</span>
               </div>
               <div className="detail-item">
-                <label>Kết quả:</label>
+                <label>Thông tin:</label>
                 <span>{selectedTransaction.Payload}</span>
               </div>
               <div className="detail-item">
@@ -284,4 +308,4 @@ const TransactionHistory = () => {
   );
 };
 
-export default TransactionHistory; 
+export default TransactionHistory;
