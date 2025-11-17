@@ -13,7 +13,6 @@ export const AuthService = {
         const decodedToken = jwtDecode(accessToken);
         
         localStorage.setItem(STORAGE_KEYS.ACCESS_TOKEN, accessToken);
-        localStorage.setItem(STORAGE_KEYS.REFRESH_TOKEN, refreshToken);
         localStorage.setItem(STORAGE_KEYS.USER_ID, 
             decodedToken["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"]);
         localStorage.setItem(STORAGE_KEYS.USER_ROLE,
@@ -55,7 +54,6 @@ export const AuthService = {
 
     logout: () => {
         localStorage.removeItem(STORAGE_KEYS.ACCESS_TOKEN);
-        localStorage.removeItem(STORAGE_KEYS.REFRESH_TOKEN);
         localStorage.removeItem(STORAGE_KEYS.USER_ID);
         localStorage.removeItem(STORAGE_KEYS.USER_ROLE);
         localStorage.removeItem(STORAGE_KEYS.USER_NAME);

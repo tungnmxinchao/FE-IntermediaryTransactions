@@ -3,8 +3,7 @@ export const API_CONFIG = {
     ENDPOINTS: {
         AUTH: {
             LOGIN: '/api/Users/login',
-            REGISTER: '/api/Users/register',
-            REFRESH_TOKEN: '/api/Users/refresh-token',
+            REGISTER: '/api/Users/register'
         },
         ODATA: {
             ORDER: '/odata/Order',
