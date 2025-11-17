@@ -17,6 +17,7 @@ import Deposit from './components/deposit/Deposit';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { API_CONFIG } from './config/api.config';
 import './App.css';
 
 const Home = () => {
@@ -75,7 +76,7 @@ const AppContent = () => {
       try {
         const userId = localStorage.getItem('userId');
         const token = localStorage.getItem('accessToken');
-        const response = await fetch(`https://localhost:44316/api/Users/${userId}`, {
+        const response = await fetch(`${API_CONFIG.BASE_URL}/api/Users/${userId}`, {
           headers: {
             'Authorization': `Bearer ${token}`,
           },

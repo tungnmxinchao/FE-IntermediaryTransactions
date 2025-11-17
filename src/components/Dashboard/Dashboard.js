@@ -16,6 +16,7 @@ import { toast } from 'react-toastify';
 import UserManagementPage from './UserManagementPage';
 import OrderManagementPage from './OrderManagementPage';
 import TransactionHistoryPage from './TransactionHistoryPage';
+import { API_CONFIG } from '../../config/api.config';
 import './Dashboard.css';
 
 const Dashboard = () => {
@@ -31,7 +32,7 @@ const Dashboard = () => {
     const fetchProfitData = async () => {
       try {
         const token = localStorage.getItem('accessToken');
-        const response = await fetch('https://localhost:44316/Admin/get-profit', {
+        const response = await fetch(`${API_CONFIG.BASE_URL}/Admin/get-profit`, {
           headers: {
             'Authorization': `Bearer ${token}`,
           },

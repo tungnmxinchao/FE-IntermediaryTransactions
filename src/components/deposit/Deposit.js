@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { STORAGE_KEYS } from '../../constants/storage.constants';
+import { API_CONFIG } from '../../config/api.config';
+
 import './Deposit.css';
 
 const Deposit = () => {
@@ -22,7 +24,7 @@ const Deposit = () => {
         return;
       }
 
-      const response = await fetch('https://localhost:44316/api/Deposit', {
+      const response = await fetch(`${API_CONFIG.BASE_URL}/api/Deposit`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

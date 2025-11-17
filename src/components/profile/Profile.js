@@ -4,6 +4,7 @@ import { FaUser, FaWallet, FaEnvelope, FaPhone, FaMapMarkerAlt } from 'react-ico
 import { toast } from 'react-toastify';
 import { STORAGE_KEYS } from '../../constants/storage.constants';
 import './Profile.css';
+import { API_CONFIG } from '../../config/api.config';
 
 const Profile = () => {
   const { userInfo } = useAuth();
@@ -21,7 +22,7 @@ const Profile = () => {
           return;
         }
 
-        const response = await fetch(`https://localhost:44316/api/Users/${userId}`, {
+        const response = await fetch(`${API_CONFIG.BASE_URL}/api/Users/${userId}`, {
           headers: {
             'Authorization': `Bearer ${token}`,
           },

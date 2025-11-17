@@ -5,6 +5,8 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import axios from 'axios';
 import './Dashboard.css';
+import { API_CONFIG } from '../../config/api.config';
+
 
 const { RangePicker } = DatePicker;
 
@@ -199,7 +201,7 @@ const TransactionHistoryPage = () => {
     try {
       setLoading(true);
       const filterString = buildFilterString();
-      const response = await axios.get('https://localhost:44316/odata/AdminViewTransactions', {
+      const response = await axios.get(`${API_CONFIG.BASE_URL}/odata/AdminViewTransactions`, {
         params: {
           $expand: 'User',
           $filter: filterString,
@@ -263,7 +265,7 @@ const TransactionHistoryPage = () => {
   const handleUpdateStatus = async (id, isProcessed) => {
     try {
       setUpdating(true);
-      await axios.put(`https://localhost:44316/api/TransactionHistory/${id}/${isProcessed}`, null, {
+      await axios.put(`${API_CONFIG.BASE_URL}/api/TransactionHistory/${id}/${isProcessed}`, null, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
         },

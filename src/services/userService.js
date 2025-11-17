@@ -1,8 +1,8 @@
 import axios from 'axios';
+import { API_CONFIG } from '../config/api.config'; 
 
-const BASE_URL = 'https://localhost:44316';
-const ODATA_URL = `${BASE_URL}/odata`;
-const API_URL = `${BASE_URL}/api`;
+const ODATA_URL = `${API_CONFIG.BASE_URL}/odata`;
+const API_URL = `${API_CONFIG.BASE_URL}/api`;
 
 const getAuthHeader = () => {
   const token = localStorage.getItem('accessToken');

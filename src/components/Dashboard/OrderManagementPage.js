@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import axios from 'axios';
 import './Dashboard.css';
+import { API_CONFIG } from '../../config/api.config';
 
 const OrderManagementPage = () => {
   const navigate = useNavigate();
@@ -179,7 +180,7 @@ const OrderManagementPage = () => {
     try {
       setLoading(true);
       const filterString = buildFilterString();
-      const response = await axios.get('https://localhost:44316/odata/AdminViewOrders', {
+      const response = await axios.get(`${API_CONFIG.BASE_URL}/odata/AdminViewOrders`, {
         params: {
           $expand: 'CreatedByUser,Customer',
           $filter: filterString,
@@ -256,7 +257,7 @@ const OrderManagementPage = () => {
   const handleResolveDispute = async (isSellerCorrect) => {
     try {
       const response = await axios.post(
-        `https://localhost:44316/api/Order/${selectedOrder.Id}/resolve-dispute`,
+        `${API_CONFIG.BASE_URL}/api/Order/${selectedOrder.Id}/resolve-dispute`,
         {
           orderId: selectedOrder.Id,
           isSellerCorrect: isSellerCorrect
