@@ -1,3 +1,5 @@
+/* SearchBar.css */
+
 .search-bar {
   background: white;
   padding: 1.5rem;
@@ -27,19 +29,22 @@
 
 .search-field input,
 .search-field select {
-  padding: 0.5rem;
-  border: 1px solid #e2e8f0;
+  padding: 0.6rem 0.75rem;
+  border: 2px solid #a0aec0;
+  /* Viền rõ hơn */
   border-radius: 0.375rem;
   font-size: 0.875rem;
   color: #2d3748;
-  transition: border-color 0.2s;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  background-color: #ffffff;
 }
 
 .search-field input:focus,
 .search-field select:focus {
   outline: none;
-  border-color: #4299e1;
-  box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.1);
+  border-color: #3182ce;
+  /* Màu viền khi focus */
+  box-shadow: 0 0 0 3px rgba(49, 130, 206, 0.2);
 }
 
 .price-inputs {
@@ -94,11 +99,12 @@
   background-color: #cbd5e0;
 }
 
+/* Responsive */
 @media (max-width: 768px) {
   .search-grid {
     grid-template-columns: 1fr;
   }
-  
+
   .search-bar {
     padding: 1rem;
   }
@@ -111,4 +117,4 @@
   .reset-button {
     max-width: 100%;
   }
-} 
+}

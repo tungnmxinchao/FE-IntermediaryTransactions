@@ -57,22 +57,22 @@ const Dashboard = () => {
     {
       key: 'overview',
       icon: <DashboardOutlined />,
-      label: 'Overview',
+      label: 'Tổng quan',
     },
     {
       key: 'users',
       icon: <TeamOutlined />,
-      label: 'User Management',
+      label: 'Người dùng',
     },
     {
       key: 'orders',
       icon: <OrderedListOutlined />,
-      label: 'Order Management',
+      label: 'Đơn hàng',
     },
     {
       key: 'transactions',
       icon: <HistoryOutlined />,
-      label: 'Transaction History',
+      label: 'Lịch sử giao dịch',
     },
   ];
 
@@ -90,7 +90,7 @@ const Dashboard = () => {
 
   const Overview = () => (
     <>
-      <h1 className="dashboard-title">Dashboard Overview</h1>
+      <h1 className="dashboard-title">Tổng quan</h1>
       
       {/* Statistics Cards */}
       <Row gutter={[16, 16]} className="statistics-row">
@@ -129,45 +129,45 @@ const Dashboard = () => {
       <Row gutter={[16, 16]} className="content-row">
         <Col xs={24} lg={8}>
           <Card 
-            title="Quick Actions" 
+            title="Thao tác nhanh" 
             className="dashboard-card"
             onClick={() => navigate('/dashboard/users')}
           >
             <div className="quick-action">
               <TeamOutlined className="action-icon" />
               <div className="action-content">
-                <h3>Manage Users</h3>
-                <p>View and manage user accounts</p>
+                <h3>Quản lý người dùng</h3>
+                <p>Xem và quản lý tài khoản người dùng</p>
               </div>
             </div>
           </Card>
         </Col>
         <Col xs={24} lg={8}>
           <Card 
-            title="Quick Actions" 
+            title="Thao tác nhanh" 
             className="dashboard-card"
             onClick={() => navigate('/dashboard/orders')}
           >
             <div className="quick-action">
               <OrderedListOutlined className="action-icon" />
               <div className="action-content">
-                <h3>Manage Orders</h3>
-                <p>View and process orders</p>
+                <h3>Quản lý đơn hàng</h3>
+                <p>Xem và xử lý đơn hàng</p>
               </div>
             </div>
           </Card>
         </Col>
         <Col xs={24} lg={8}>
           <Card 
-            title="Quick Actions" 
+            title="Thao tác nhanh" 
             className="dashboard-card"
             onClick={() => navigate('/dashboard/transactions')}
           >
             <div className="quick-action">
               <HistoryOutlined className="action-icon" />
               <div className="action-content">
-                <h3>Transaction History</h3>
-                <p>View transaction records</p>
+                <h3>Lịch sử giao dịch</h3>
+                <p>Xem lịch sử giao dịch</p>
               </div>
             </div>
           </Card>
@@ -180,7 +180,7 @@ const Dashboard = () => {
     <div className="dashboard-layout">
       <div className="dashboard-sidebar">
         <div className="sidebar-header">
-          <h2>Admin Panel</h2>
+          <h2>Quản trị hế thống</h2>
         </div>
         <Menu
           mode="inline"

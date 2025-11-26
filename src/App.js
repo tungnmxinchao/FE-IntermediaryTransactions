@@ -130,14 +130,14 @@ const AppContent = () => {
   return (
     <div className="App">
       <nav className="navbar">
-        <div className="nav-brand">Intermediary Transactions</div>
+        <div className="nav-brand">Green Transfer</div>
         <div className="nav-links">
           <Link to="/home">Trang chủ</Link>
           <Link to="/public-market">Chợ công khai</Link>
           {isAuthenticated ? (
             <>
               {userInfo?.userRole === 'Admin' && (
-                <Link to="/dashboard" className="admin-link">Dashboard</Link>
+                <Link to="/dashboard" className="admin-link">Quản trị hệ thống</Link>
               )}
               <div className="dropdown" ref={dropdownRef}>
                 <button 

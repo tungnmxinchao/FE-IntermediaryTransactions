@@ -35,7 +35,7 @@ const UserManagementPage = () => {
       sorter: true,
     },
     {
-      title: 'Username',
+      title: 'Tên đăng nhập',
       dataIndex: 'Username',
       key: 'Username',
     },
@@ -45,7 +45,7 @@ const UserManagementPage = () => {
       key: 'Email',
     },
     {
-      title: 'Money',
+      title: 'Số dư',
       dataIndex: 'Money',
       key: 'Money',
       render: (money) => new Intl.NumberFormat('vi-VN', {
@@ -54,7 +54,7 @@ const UserManagementPage = () => {
       }).format(money),
     },
     {
-      title: 'Role',
+      title: 'Vai trò',
       dataIndex: ['role', 'RoleName'],
       key: 'RoleName',
       render: (role) => (
@@ -64,39 +64,39 @@ const UserManagementPage = () => {
       ),
     },
     {
-      title: 'Status',
+      title: 'Trạng thái',
       dataIndex: 'IsActive',
       key: 'IsActive',
       render: (isActive) => (
         <Tag color={isActive ? 'green' : 'red'}>
-          {isActive ? 'Active' : 'Inactive'}
+          {isActive ? 'Hoạt động' : 'Khóa'}
         </Tag>
       ),
     },
     {
-      title: 'Created At',
+      title: 'Ngày tạo',
       dataIndex: 'CreatedAt',
       key: 'CreatedAt',
       render: (date) => new Date(date).toLocaleString(),
     },
     {
-      title: 'Actions',
+      title: 'Hành động',
       key: 'actions',
       render: (_, record) => (
         <Space size="middle">
-          <Button 
-            type="primary" 
+          <Button
+            type="primary"
             icon={<EditOutlined />}
             onClick={() => handleEdit(record)}
           >
-            Edit
+            Chỉnh sửa
           </Button>
-          <Button 
-            danger 
+          <Button
+            danger
             icon={<DeleteOutlined />}
             onClick={() => handleDelete(record)}
           >
-            Delete
+            Xóa
           </Button>
         </Space>
       ),
@@ -105,7 +105,7 @@ const UserManagementPage = () => {
 
   const buildFilterString = () => {
     const filterConditions = [];
-    
+
     if (filters.id) {
       filterConditions.push(`Id eq ${filters.id}`);
     }
@@ -209,10 +209,10 @@ const UserManagementPage = () => {
 
   const handleDelete = (user) => {
     const confirmTag = (
-      <div style={{ 
-        position: 'fixed', 
-        top: '50%', 
-        left: '50%', 
+      <div style={{
+        position: 'fixed',
+        top: '50%',
+        left: '50%',
         transform: 'translate(-50%, -50%)',
         backgroundColor: 'white',
         padding: '20px',
@@ -225,9 +225,9 @@ const UserManagementPage = () => {
         <p style={{ marginBottom: '20px' }}>Bạn có chắc chắn muốn vô hiệu hóa tài khoản của {user.Username}?</p>
         <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px' }}>
           <Button onClick={() => setShowDeleteConfirm(null)}>Hủy</Button>
-          <Button 
-            type="primary" 
-            danger 
+          <Button
+            type="primary"
+            danger
             onClick={async () => {
               try {
                 const response = await userService.updateUser(user.Id, {
@@ -235,7 +235,7 @@ const UserManagementPage = () => {
                   isActive: false,
                   roleId: user.RoleId,
                 });
-                
+
                 if (response) {
                   toast.success('Vô hiệu hóa tài khoản thành công!', {
                     position: "top-right",
@@ -280,8 +280,7 @@ const UserManagementPage = () => {
 
   const handleModalOk = async () => {
     try {
-      const values = await form.validateFields();
-      
+      const values = await form.validateFields(); // <- nếu form invalid, nó sẽ throw
       if (isCreating) {
         // Create new user
         await userService.createUser({
@@ -289,45 +288,30 @@ const UserManagementPage = () => {
           passwordHash: values.Password,
           email: values.Email,
         });
-        toast.success('User created successfully!', {
-          position: "top-right",
-          autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-        });
+        toast.success('Tạo người dùng thành công!');
       } else {
         // Update existing user
         await userService.updateUser(editingUser.Id, {
           email: values.Email,
           isActive: values.IsActive,
-          roleId: values.RoleId + 1, // Convert back to 1-based index
+          roleId: values.RoleId + 1,
         });
-        toast.success('User updated successfully!', {
-          position: "top-right",
-          autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-        });
+        toast.success('Cập nhật người dùng thành công!');
       }
-      
+
       setIsModalVisible(false);
       form.resetFields();
       setEditingUser(null);
-      fetchUsers(); // Refresh the user list
+      fetchUsers();
     } catch (error) {
-      handleApiError(error);
-      toast.error(error.response?.data?.message || 'Operation failed!', {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-      });
+      if (error.errorFields) {
+        // Đây là lỗi validate form => không cần call handleApiError
+        toast.error('Vui lòng điền đầy đủ thông tin hợp lệ!');
+      } else {
+        // Lỗi API
+        handleApiError(error);
+        toast.error(error.response?.data?.message || 'Lỗi khi thực hiện thao tác!');
+      }
     }
   };
 
@@ -342,7 +326,7 @@ const UserManagementPage = () => {
     <div className="dashboard-page">
       {showDeleteConfirm && (
         <>
-          <div 
+          <div
             style={{
               position: 'fixed',
               top: 0,
@@ -357,16 +341,16 @@ const UserManagementPage = () => {
           {showDeleteConfirm}
         </>
       )}
-      
+
       <div className="page-header">
-        <h1>User Management</h1>
+        <h1>Quản lý người dùng</h1>
         <div className="header-actions">
-          <Button 
-            type="primary" 
+          <Button
+            type="primary"
             icon={<UserAddOutlined />}
             onClick={handleAddNew}
           >
-            Add New User
+            Thêm người dùng
           </Button>
         </div>
       </div>
@@ -375,36 +359,36 @@ const UserManagementPage = () => {
         <Row gutter={[16, 16]} className="filter-row">
           <Col xs={24} sm={12} md={6}>
             <Input
-              placeholder="Search by ID"
+              placeholder="Tìm theo ID"
               value={filters.id}
               onChange={(e) => handleFilterChange('id', e.target.value)}
             />
           </Col>
           <Col xs={24} sm={12} md={6}>
             <Input
-              placeholder="Search by Username"
+              placeholder="Tìm theo tên đăng nhập"
               value={filters.username}
               onChange={(e) => handleFilterChange('username', e.target.value)}
             />
           </Col>
           <Col xs={24} sm={12} md={6}>
             <Input
-              placeholder="Search by Email"
+              placeholder="Tìm theo Email"
               value={filters.email}
               onChange={(e) => handleFilterChange('email', e.target.value)}
             />
           </Col>
           <Col xs={24} sm={12} md={6}>
             <Select
-              placeholder="Status"
+              placeholder="Trạng thái"
               style={{ width: '100%' }}
               value={filters.isActive}
               onChange={(value) => handleFilterChange('isActive', value)}
               allowClear
             >
-              <Select.Option value="all">All</Select.Option>
-              <Select.Option value="true">Active</Select.Option>
-              <Select.Option value="false">Inactive</Select.Option>
+              <Select.Option value="all">Tất cả</Select.Option>
+              <Select.Option value="true">Hoạt động</Select.Option>
+              <Select.Option value="false">Khóa</Select.Option>
             </Select>
           </Col>
           <Col xs={24} sm={12} md={6}>
@@ -415,9 +399,9 @@ const UserManagementPage = () => {
               onChange={(value) => handleFilterChange('role', value)}
               allowClear
             >
-              <Select.Option value="all">All</Select.Option>
+              <Select.Option value="all">Tất cả</Select.Option>
               <Select.Option value="1">Admin</Select.Option>
-              <Select.Option value="2">Customer</Select.Option>
+              <Select.Option value="2">Khách hàng</Select.Option>
             </Select>
           </Col>
           <Col xs={24} sm={12} md={6}>
@@ -428,12 +412,12 @@ const UserManagementPage = () => {
             />
           </Col>
           <Col xs={24} sm={12} md={6}>
-            <Button 
+            <Button
               icon={<ReloadOutlined />}
               onClick={handleResetFilters}
               style={{ width: '100%' }}
             >
-              Reset Filters
+              Bỏ lọc
             </Button>
           </Col>
         </Row>
@@ -444,18 +428,18 @@ const UserManagementPage = () => {
           rowKey="Id"
           loading={loading}
           onChange={handleTableChange}
-          pagination={{ 
+          pagination={{
             total,
             pageSize: 10,
             showSizeChanger: true,
             showQuickJumper: true,
-            showTotal: (total) => `Total ${total} users`
+            showTotal: (total) => `Tổng số ${total} người dùng`
           }}
         />
       </div>
 
       <Modal
-        title={isCreating ? "Add New User" : "Edit User"}
+        title={isCreating ? "Thêm người dùng" : "Chỉnh sủa người dùng"}
         open={isModalVisible}
         onOk={handleModalOk}
         onCancel={handleModalCancel}
@@ -468,15 +452,15 @@ const UserManagementPage = () => {
             <>
               <Form.Item
                 name="Username"
-                label="Username"
-                rules={[{ required: true, message: 'Please input username!' }]}
+                label="Tên người dùng"
+                rules={[{ required: true, message: 'Vui lòng nhập tên người dùng!' }]}
               >
                 <Input />
               </Form.Item>
               <Form.Item
                 name="Password"
-                label="Password"
-                rules={[{ required: true, message: 'Please input password!' }]}
+                label="Mật khẩu"
+                rules={[{ required: true, message: 'Vui lòng nhập mật khẩu!' }]}
               >
                 <Input.Password />
               </Form.Item>
@@ -484,8 +468,8 @@ const UserManagementPage = () => {
                 name="Email"
                 label="Email"
                 rules={[
-                  { required: true, message: 'Please input email!' },
-                  { type: 'email', message: 'Please input valid email!' }
+                  { required: true, message: 'Vui lòng nhập email!' },
+                  { type: 'email', message: 'Vui lòng nhập đúng email!' }
                 ]}
               >
                 <Input />
@@ -497,30 +481,30 @@ const UserManagementPage = () => {
                 name="Email"
                 label="Email"
                 rules={[
-                  { required: true, message: 'Please input email!' },
-                  { type: 'email', message: 'Please input valid email!' }
+                  { required: true, message: 'Vui lòng nhập email!' },
+                  { type: 'email', message: 'Vui lòng nhập đúng email!' }
                 ]}
               >
                 <Input />
               </Form.Item>
               <Form.Item
                 name="RoleId"
-                label="Role"
-                rules={[{ required: true, message: 'Please select role!' }]}
+                label="Vai trò"
+                rules={[{ required: true, message: 'Vui lòng chọn vai trò!' }]}
               >
                 <Select>
                   <Select.Option value={0}>Admin</Select.Option>
-                  <Select.Option value={1}>Customer</Select.Option>
+                  <Select.Option value={1}>Khách hàng</Select.Option>
                 </Select>
               </Form.Item>
               <Form.Item
                 name="IsActive"
-                label="Status"
-                rules={[{ required: true, message: 'Please select status!' }]}
+                label="Trạng thái"
+                rules={[{ required: true, message: 'Vui lòng chọn trạng thái!' }]}
               >
                 <Select>
-                  <Select.Option value={true}>Active</Select.Option>
-                  <Select.Option value={false}>Inactive</Select.Option>
+                  <Select.Option value={true}>Hoạt động</Select.Option>
+                  <Select.Option value={false}>Khóa</Select.Option>
                 </Select>
               </Form.Item>
             </>
