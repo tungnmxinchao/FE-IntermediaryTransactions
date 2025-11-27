@@ -1,5 +1,4 @@
 .dashboard-layout {
-  display: flex;
   min-height: 100vh;
   background-color: #f0f2f5;
 }
@@ -253,4 +252,43 @@
   .header-actions .ant-picker {
     width: 100% !important;
   }
-} 
+}
+/* Filter row inputs: giữ nguyên kích thước nhưng viền rõ */
+.filter-row .ant-input,
+.filter-row .ant-select,
+.filter-row .ant-picker {
+  box-sizing: border-box; /* quan trọng để giữ kích thước */
+  border: 2px solid #a0aec0; /* viền rõ */
+  border-radius: 6px;
+  background-color: #ffffff;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+/* Focus nổi bật */
+.filter-row .ant-input:focus,
+.filter-row .ant-select-focused .ant-select-selector,
+.filter-row .ant-picker-focused {
+  border-color: #3182ce;
+  box-shadow: 0 0 0 3px rgba(49, 130, 206, 0.3);
+  outline: none;
+}
+
+/* Reset button */
+.filter-row .ant-btn {
+  box-sizing: border-box;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .filter-row {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .filter-row .ant-input,
+  .filter-row .ant-select,
+  .filter-row .ant-picker,
+  .filter-row .ant-btn {
+    width: 100%;
+  }
+}

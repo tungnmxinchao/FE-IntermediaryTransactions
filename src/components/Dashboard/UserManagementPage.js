@@ -409,6 +409,7 @@ const UserManagementPage = () => {
               style={{ width: '100%' }}
               value={filters.createdAt}
               onChange={(dates) => handleFilterChange('createdAt', dates)}
+              placeholder={['Ngày bắt đầu', 'Ngày kết thúc']}
             />
           </Col>
           <Col xs={24} sm={12} md={6}>

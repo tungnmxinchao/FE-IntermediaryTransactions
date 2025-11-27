@@ -1,0 +1,175 @@
+.withdraw-container {
+  min-height: calc(100vh - 64px);
+  padding: 2rem;
+  background-color: #f7fafc;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.withdraw-card {
+  background: white;
+  border-radius: 8px;
+  padding: 2rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 500px;
+}
+
+.withdraw-card h1 {
+  color: #2d3748;
+  margin-bottom: 0.5rem;
+  font-size: 1.875rem;
+}
+
+.withdraw-description {
+  color: #718096;
+  margin-bottom: 2rem;
+  font-size: 1rem;
+}
+
+.balance-info {
+  background: #f0f9ff;
+  border: 1px solid #bae6fd;
+  border-radius: 6px;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.balance-display {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.balance-label {
+  color: #0369a1;
+  font-weight: 500;
+}
+
+.balance-amount {
+  color: #0369a1;
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.withdraw-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.form-group label {
+  color: #4a5568;
+  font-weight: 500;
+}
+
+.amount-input {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.amount-input input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  font-size: 1rem;
+  color: #2d3748;
+  transition: border-color 0.2s;
+}
+
+.amount-input input:focus {
+  outline: none;
+  border-color: #f59e0b;
+  box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.1);
+}
+
+.amount-hint {
+  color: #718096;
+  font-size: 0.875rem;
+}
+
+.withdraw-button {
+  background-color: #f59e0b;
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.withdraw-button:hover:not(:disabled) {
+  background-color: #d97706;
+  transform: translateY(-1px);
+}
+
+.withdraw-button:disabled {
+  background-color: #a0aec0;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.withdraw-notice {
+  margin-top: 2rem;
+  padding: 1rem;
+  background: #fefce8;
+  border: 1px solid #fde047;
+  border-radius: 6px;
+}
+
+.withdraw-notice h3 {
+  color: #92400e;
+  margin-bottom: 0.5rem;
+  font-size: 1rem;
+}
+
+.withdraw-notice ul {
+  color: #92400e;
+  margin: 0;
+  padding-left: 1.5rem;
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+.withdraw-notice li {
+  margin-bottom: 0.25rem;
+}
+
+.withdraw-notice li:last-child {
+  margin-bottom: 0;
+}
+
+@media (max-width: 640px) {
+  .withdraw-container {
+    padding: 1rem;
+  }
+
+  .withdraw-card {
+    padding: 1.5rem;
+  }
+
+  .balance-display {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.25rem;
+  }
+
+  .balance-amount {
+    font-size: 1.1rem;
+  }
+}

@@ -1,21 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import { Card, Row, Col, Statistic, Menu } from 'antd';
-import { 
-  UserOutlined, 
-  ShoppingCartOutlined, 
+import {
+  UserOutlined,
+  ShoppingCartOutlined,
   TransactionOutlined,
   DashboardOutlined,
   TeamOutlined,
   OrderedListOutlined,
   HistoryOutlined,
   DollarOutlined,
-  WalletOutlined
+  WalletOutlined,
+  MoneyCollectOutlined
 } from '@ant-design/icons';
 import { useNavigate, Routes, Route, Navigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import UserManagementPage from './UserManagementPage';
 import OrderManagementPage from './OrderManagementPage';
 import TransactionHistoryPage from './TransactionHistoryPage';
+import Withdraw from '../withdraw/Withdraw';
 import { API_CONFIG } from '../../config/api.config';
 import './Dashboard.css';
 
@@ -68,6 +70,11 @@ const Dashboard = () => {
       key: 'orders',
       icon: <OrderedListOutlined />,
       label: 'Đơn hàng',
+    },
+    {
+      key: 'withdraw',
+      icon: <MoneyCollectOutlined />,
+      label: 'Rút tiền',
     },
     {
       key: 'transactions',
@@ -196,6 +203,7 @@ const Dashboard = () => {
           <Route path="/overview" element={<Overview />} />
           <Route path="/users" element={<UserManagementPage />} />
           <Route path="/orders" element={<OrderManagementPage />} />
+          <Route path="/withdraw" element={<Withdraw />} />
           <Route path="/transactions" element={<TransactionHistoryPage />} />
         </Routes>
       </div>

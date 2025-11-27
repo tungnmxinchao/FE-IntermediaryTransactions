@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, Link, Navigate, useNavigate } from 'react-router-dom';
-import { FaSignOutAlt, FaChevronDown, FaUser, FaWallet, FaEye, FaMoneyBillWave } from 'react-icons/fa';
+import { BrowserRouter as Router, Routes, Route, Link, Navigate, useNavigate, useLocation  } from 'react-router-dom';
+import { FaSignOutAlt, FaChevronDown, FaUser, FaWallet, FaEye, FaMoneyBillWave, FaCoins } from 'react-icons/fa';
 import PublicMarket from './components/public-market/PublicMarket';
 import MySales from './components/my-sales/MySales';
 import MyPurchases from './components/my-purchases/MyPurchases';
@@ -14,6 +14,7 @@ import ProtectedRoute from './components/auth/ProtectedRoute';
 import Dashboard from './components/Dashboard/Dashboard';
 import Profile from './components/profile/Profile';
 import Deposit from './components/deposit/Deposit';
+import Withdraw from './components/withdraw/Withdraw';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -64,6 +65,7 @@ const Home = () => {
 };
 
 const AppContent = () => {
+  const location = useLocation();
   const navigate = useNavigate();
   const { isAuthenticated, userInfo, logout } = useAuth();
   const [showManagementDropdown, setShowManagementDropdown] = useState(false);
@@ -154,6 +156,9 @@ const AppContent = () => {
                     <Link to="/deposit">
                       <FaMoneyBillWave /> Nạp tiền
                     </Link>
+                    <Link to="/withdraw">
+                      <FaCoins /> Rút tiền
+                    </Link>
                   </div>
                 )}
               </div>
@@ -232,6 +237,11 @@ const AppContent = () => {
             <Deposit />
           </ProtectedRoute>
         } />
+        <Route path="/withdraw" element={
+          <ProtectedRoute>
+            <Withdraw />
+          </ProtectedRoute>
+        } />
         <Route path="/transaction/:id" element={
           <ProtectedRoute>
             <TransactionDetail />
@@ -245,7 +255,7 @@ const AppContent = () => {
           </ProtectedRoute>
         } />
       </Routes>
-      <Footer />
+      {!location.pathname.startsWith('/dashboard') && <Footer />}
       <ToastContainer
         position="top-right"
         autoClose={3000}
