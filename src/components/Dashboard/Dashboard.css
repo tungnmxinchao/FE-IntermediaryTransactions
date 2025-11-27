@@ -4,7 +4,7 @@
 }
 
 .dashboard-sidebar {
-  width: 250px;
+  width: 200px;
   background: #fff;
   box-shadow: 2px 0 8px rgba(0, 0, 0, 0.06);
   position: fixed;
@@ -14,7 +14,7 @@
 }
 
 .sidebar-header {
-  padding: 20px;
+  padding: 16px;
   text-align: center;
   border-bottom: 1px solid #f0f0f0;
 }
@@ -22,7 +22,7 @@
 .sidebar-header h2 {
   margin: 0;
   color: #2d3748;
-  font-size: 1.5rem;
+  font-size: 1.25rem;
   font-weight: 600;
 }
 
@@ -55,18 +55,18 @@
 
 .dashboard-content {
   flex: 1;
-  margin-left: 250px;
-  padding: 24px;
+  margin-left: 200px;
+  padding: 20px;
   background-color: #f0f2f5;
 }
 
 .dashboard-title {
-  margin-bottom: 24px;
+  margin-bottom: 20px;
   color: #1a1a1a;
-  font-size: 28px;
+  font-size: 24px;
   font-weight: 600;
   position: relative;
-  padding-bottom: 12px;
+  padding-bottom: 10px;
 }
 
 .dashboard-title::after {
@@ -152,22 +152,22 @@
 }
 
 .action-icon {
-  font-size: 32px;
+  font-size: 28px;
   color: #4299e1;
-  margin-right: 16px;
+  margin-right: 14px;
 }
 
 .action-content h3 {
-  margin: 0 0 8px 0;
+  margin: 0 0 6px 0;
   color: #2d3748;
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 600;
 }
 
 .action-content p {
   margin: 0;
   color: #4a5568;
-  font-size: 14px;
+  font-size: 13px;
 }
 
 /* Page Header Styles */
@@ -217,6 +217,25 @@
 }
 
 /* Responsive adjustments */
+@media (max-width: 1024px) {
+  .dashboard-sidebar {
+    width: 180px;
+  }
+
+  .dashboard-content {
+    margin-left: 180px;
+    padding: 18px;
+  }
+
+  .dashboard-title {
+    font-size: 22px;
+  }
+
+  .statistics-row {
+    margin-bottom: 20px;
+  }
+}
+
 @media (max-width: 768px) {
   .dashboard-layout {
     flex-direction: column;
@@ -234,7 +253,7 @@
   }
 
   .dashboard-title {
-    font-size: 24px;
+    font-size: 20px;
     margin-bottom: 16px;
   }
 
@@ -251,6 +270,14 @@
   .header-actions .ant-select,
   .header-actions .ant-picker {
     width: 100% !important;
+  }
+
+  .action-icon {
+    font-size: 24px;
+  }
+
+  .action-content h3 {
+    font-size: 15px;
   }
 }
 /* Filter row inputs: giữ nguyên kích thước nhưng viền rõ */
