@@ -24,7 +24,7 @@ const Withdraw = () => {
           return;
         }
 
-        const response = await fetch(`${API_CONFIG.BASE_URL}/api/User/${userId}`, {
+        const response = await fetch(`${API_CONFIG.BASE_URL}/api/Users/${userId}`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
