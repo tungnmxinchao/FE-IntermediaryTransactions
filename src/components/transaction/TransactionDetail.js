@@ -97,6 +97,25 @@ const TransactionDetail = () => {
     fetchTransactionDetails();
   }, [id, navigate]);
 
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const token = localStorage.getItem('accessToken');
+        const res = await fetch(`${API_CONFIG.BASE_URL}/api/Category/tree`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        const data = await res.json();
+        setCategories(data);
+      } catch (err) {
+        toast.error('Không thể tải danh mục');
+      }
+    };
+
+    if (transaction?.updateable) {
+      fetchCategories();
+    }
+  }, [transaction])
+
   const handleChange = (e) => {
     const { name, value, type } = e.target;
 
@@ -148,9 +167,7 @@ const TransactionDetail = () => {
   const handleUpdate = async () => {
     if (!transaction.updateable) return;
 
-    if (!window.confirm('Bạn đã quyết định cập nhật thông tin đơn hàng?')) {
-      return;
-    }
+    if (!window.confirm('Bạn đã quyết định cập nhật thông tin đơn hàng?')) return;
 
     try {
       const token = localStorage.getItem('accessToken');
@@ -159,22 +176,27 @@ const TransactionDetail = () => {
         return;
       }
 
+      // Tạo payload để gửi lên server và cập nhật state
+      const payload = {
+        contact: transaction.contact,
+        title: transaction.title,
+        description: transaction.description,
+        isPublic: transaction.isPublic,
+        hiddenValue: transaction.hiddenValue,
+        moneyValue: transaction.moneyValue,
+        isSellerChargeFee: transaction.isSellerChargeFee,
+        orderId: transaction.id,
+        categoryId: transaction.categoryId,
+        productLink: transaction.productLink,
+      };
+
       const response = await fetch(`${API_CONFIG.BASE_URL}/api/Order`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`,
         },
-        body: JSON.stringify({
-          contact: transaction.contact,
-          title: transaction.title,
-          description: transaction.description,
-          isPublic: transaction.isPublic,
-          hiddenValue: transaction.hiddenValue,
-          moneyValue: transaction.moneyValue,
-          isSellerChargeFee: transaction.isSellerChargeFee,
-          orderId: transaction.id
-        })
+        body: JSON.stringify(payload)
       });
 
       if (response.status === 401) {
@@ -189,16 +211,9 @@ const TransactionDetail = () => {
       const result = await response.json();
       if (result.code === 200) {
         toast.success('Cập nhật thành công!');
-        // Update the transaction state with new data
         setTransaction(prev => ({
           ...prev,
-          contact: transaction.contact,
-          title: transaction.title,
-          description: transaction.description,
-          isPublic: transaction.isPublic,
-          hiddenValue: transaction.hiddenValue,
-          moneyValue: transaction.moneyValue,
-          isSellerChargeFee: transaction.isSellerChargeFee,
+          ...payload,
           updatedAt: new Date().toISOString()
         }));
       } else {
@@ -208,6 +223,7 @@ const TransactionDetail = () => {
       toast.error(error.message);
     }
   };
+
 
   const closeModal = () => {
     setModalConfig({
@@ -611,6 +627,51 @@ const TransactionDetail = () => {
             <div className="detail-value">{transaction.createdByUser.username}</div>
           </div>
 
+          <div className="detail-row">
+            <div className="detail-label">Loại sản phẩm</div>
+            <div className="detail-value editable">
+              {transaction.updateable ? (
+                <select name="categoryId" value={transaction.categoryId || ''} onChange={handleChange}>
+                  {categories.map(cat => (
+                    <optgroup key={cat.id} label={cat.name}>
+                      {cat.children.map(sub => (
+                        <option key={sub.id} value={sub.id}>
+                          {sub.name}
+                        </option>
+                      ))}
+                      {cat.children.length === 0 && (
+                        <option key={cat.id} value={cat.id}>{cat.name}</option>
+                      )}
+                    </optgroup>
+                  ))}
+                </select>
+              ) : (
+                <span>{transaction.category?.name || 'Chưa xác định'}</span>
+              )}
+            </div>
+          </div>
+
+          <div className="detail-row">
+            <div className="detail-label">Link sản phẩm</div>
+            <div className="detail-value editable">
+              {transaction.updateable ? (
+                <input
+                  type="text"
+                  name="productLink"
+                  value={transaction.productLink || ''}
+                  onChange={handleChange}
+                />
+              ) : (
+                <a href={transaction.productLink} target="_blank" rel="noopener noreferrer">
+                  {transaction.productLink}
+                </a>
+              )}
+            </div>
+          </div>
+
+
+
+
           {transaction.contact && transaction.contact.trim() !== '' && (
             <div className="detail-row">
               <div className="detail-label">Thông tin liên hệ</div>
@@ -625,6 +686,7 @@ const TransactionDetail = () => {
               </div>
             </div>
           )}
+
 
           <div className="detail-row">
             <div className="detail-label">Chủ đề trung gian</div>

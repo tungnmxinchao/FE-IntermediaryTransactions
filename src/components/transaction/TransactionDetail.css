@@ -771,3 +771,20 @@
     width: 100%;
   }
 } 
+
+.detail-value.editable select {
+  width: 100%;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  border: 1px solid #e2e8f0;
+  background-color: white;
+  font-size: 1rem;
+  color: #1e293b;
+  appearance: none; /* loại bỏ mũi tên mặc định nếu muốn tùy biến */
+}
+
+.detail-value.editable select:focus {
+  outline: none;
+  border-color: #4f46e5;
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+}
