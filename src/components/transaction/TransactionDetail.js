@@ -42,6 +42,8 @@ const TransactionDetail = () => {
     onConfirm: null
   });
 
+  const [categories, setCategories] = useState([]);
+
   useEffect(() => {
     const fetchTransactionDetails = async () => {
       try {
@@ -97,7 +99,7 @@ const TransactionDetail = () => {
 
   const handleChange = (e) => {
     const { name, value, type } = e.target;
-    
+
     if (!transaction.updateable) return;
 
     if (type === 'radio') {
@@ -135,7 +137,7 @@ const TransactionDetail = () => {
 
   const handleEditorChange = (content, editor) => {
     if (!transaction.updateable) return;
-    
+
     const fieldName = editor.id;
     setTransaction(prev => ({
       ...prev,
@@ -145,7 +147,7 @@ const TransactionDetail = () => {
 
   const handleUpdate = async () => {
     if (!transaction.updateable) return;
-    
+
     if (!window.confirm('Bạn đã quyết định cập nhật thông tin đơn hàng?')) {
       return;
     }
@@ -603,24 +605,26 @@ const TransactionDetail = () => {
               {transaction.id}
             </div>
           </div>
-          
+
           <div className="detail-row">
             <div className="detail-label">Người bán</div>
             <div className="detail-value">{transaction.createdByUser.username}</div>
           </div>
 
-          <div className="detail-row">
-            <div className="detail-label">Thông tin liên hệ</div>
-            <div className="detail-value editable">
-              <input
-                type="text"
-                name="contact"
-                value={transaction.contact}
-                onChange={handleChange}
-                disabled={!transaction.updateable}
-              />
+          {transaction.contact && transaction.contact.trim() !== '' && (
+            <div className="detail-row">
+              <div className="detail-label">Thông tin liên hệ</div>
+              <div className="detail-value editable">
+                <input
+                  type="text"
+                  name="contact"
+                  value={transaction.contact}
+                  onChange={handleChange}
+                  disabled={!transaction.updateable}
+                />
+              </div>
             </div>
-          </div>
+          )}
 
           <div className="detail-row">
             <div className="detail-label">Chủ đề trung gian</div>
@@ -762,8 +766,8 @@ const TransactionDetail = () => {
                   disabled={!transaction.updateable}
                 />
               ) : (
-                <div className="description-content" 
-                  dangerouslySetInnerHTML={{ __html: transaction.description }} 
+                <div className="description-content"
+                  dangerouslySetInnerHTML={{ __html: transaction.description }}
                 />
               )}
             </div>
@@ -783,8 +787,8 @@ const TransactionDetail = () => {
                     disabled={!transaction.updateable}
                   />
                 ) : (
-                  <div className="description-content" 
-                    dangerouslySetInnerHTML={{ __html: transaction.hiddenValue }} 
+                  <div className="description-content"
+                    dangerouslySetInnerHTML={{ __html: transaction.hiddenValue }}
                   />
                 )}
               </div>
@@ -795,10 +799,10 @@ const TransactionDetail = () => {
             <div className="detail-row">
               <div className="detail-label">Link chia sẻ</div>
               <div className="share-link">
-                <input 
-                  type="text" 
-                  value={`${transaction.shareLink}`} 
-                  readOnly 
+                <input
+                  type="text"
+                  value={`${transaction.shareLink}`}
+                  readOnly
                 />
                 <button onClick={() => {
                   navigator.clipboard.writeText(`${transaction.shareLink}`);

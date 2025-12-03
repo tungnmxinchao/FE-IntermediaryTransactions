@@ -239,3 +239,21 @@
   border-color: #3182ce;
   box-shadow: 0 0 0 3px rgba(49, 130, 206, 0.2);
 }
+
+/* Category tree: in đậm cho cha */
+select option.category-parent {
+  font-weight: bold;
+  color: #2d3748; /* màu đen sẫm */
+}
+
+/* Tạo thụt đầu cho các option con */
+select option {
+  padding-left: 0.5rem; /* không áp dụng 100% trên tất cả trình duyệt nhưng vẫn giúp một số hiển thị */
+}
+
+.form-note {
+  font-size: 0.85rem;
+  color: #718096;
+  margin-top: 0.25rem;
+  display: block;
+}

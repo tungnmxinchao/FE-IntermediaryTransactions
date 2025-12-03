@@ -279,3 +279,33 @@
     width: 100%;
   }
 }
+
+
+/* Category dropdown */
+.search-filters select {
+  padding: 0.7rem 1rem;
+  border: 2px solid #a0aec0;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  background: #ffffff;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.search-filters select:focus {
+  outline: none;
+  border-color: #3182ce;
+  box-shadow: 0 0 0 3px rgba(49, 130, 206, 0.3);
+}
+
+/* Category cha in đậm và không chọn được */
+.search-filters select option:disabled {
+  font-weight: bold;
+  color: #2d3748; /* màu chữ đậm */
+  background-color: #f0f0f0; /* màu nền nhẹ */
+}
+
+/* Category con thụt lề hiển thị theo cây */
+.search-filters select option {
+  padding-left: 0.5rem; /* padding mặc định */
+}
+

@@ -6,6 +6,7 @@ import { format, parseISO } from 'date-fns';
 import { vi } from 'date-fns/locale';
 import Pagination from '../common/Pagination';
 import './PublicMarket.css';
+import { API_CONFIG } from '../../config/api.config';
 
 const ITEMS_PER_PAGE = 9;
 
@@ -27,23 +28,39 @@ const PublicMarket = () => {
     const [searchName, setSearchName] = useState('');
     const [priceMin, setPriceMin] = useState('');
     const [priceMax, setPriceMax] = useState('');
+    const [selectedCategoryId, setSelectedCategoryId] = useState(null);
+    const [categories, setCategories] = useState([]);
     const [filteredOrders, setFilteredOrders] = useState([]);
 
+    // Load category tree
+    useEffect(() => {
+        fetch(`${API_CONFIG.BASE_URL}/api/Category/tree`)
+            .then(res => res.json())
+            .then(data => setCategories(data))
+            .catch(err => console.error(err));
+    }, []);
+
+    // Filter orders based on search, price, category
     useEffect(() => {
         if (!orders) return;
 
         const min = priceMin ? Number(priceMin) : 0;
         const max = priceMax ? Number(priceMax) : Infinity;
 
-        const filtered = orders.filter(order =>
-            order.Title.toLowerCase().includes(searchName.toLowerCase()) &&
-            order.MoneyValue >= min &&
-            order.MoneyValue <= max
-        );
+        const filtered = orders.filter(order => {
+            const matchName = order.Title.toLowerCase().includes(searchName.toLowerCase());
+            const matchPrice = order.MoneyValue >= min && order.MoneyValue <= max;
+            const matchCategory = selectedCategoryId
+                ? order.CategoryId === Number(selectedCategoryId)
+                : true;
+
+            return matchName && matchPrice && matchCategory;
+        });
 
         setFilteredOrders(filtered);
-    }, [orders, searchName, priceMin, priceMax]);
+    }, [orders, searchName, priceMin, priceMax, selectedCategoryId]);
 
+    // Format date
     const formatDate = (dateString) => {
         try {
             return format(parseISO(dateString), 'dd/MM/yyyy HH:mm', { locale: vi });
@@ -52,11 +69,33 @@ const PublicMarket = () => {
         }
     };
 
+    // Handle pagination
     const handlePageChange = (pageNumber) => {
         updateParams({ skip: (pageNumber - 1) * ITEMS_PER_PAGE });
     };
 
     const currentPage = Math.floor(params.skip / ITEMS_PER_PAGE) + 1;
+
+    // Render category dropdown recursively
+    // Level 0 (cha) luôn in đậm, disabled
+    const renderCategoryOptions = (categories, level = 0) => {
+        return categories.flatMap(cat => {
+            const indent = '\u00A0'.repeat(level * 4);
+            const isParent = level === 0; // mọi category cấp 0 coi là cha
+
+            const option = (
+                <option key={cat.id} value={isParent ? '' : cat.id} disabled={isParent}>
+                    {isParent ? `* ${cat.name}` : `${indent}${cat.name}`}
+                </option>
+            );
+
+            const childrenOptions = cat.children?.length
+                ? renderCategoryOptions(cat.children, level + 1)
+                : [];
+
+            return [option, ...childrenOptions];
+        });
+    };
 
     if (loading) return <div className="loading">Đang tải dữ liệu...</div>;
     if (error) return <div className="error">{error}</div>;
@@ -65,7 +104,7 @@ const PublicMarket = () => {
         <div className="public-market">
             <h1>Chợ Công Khai</h1>
 
-            {/* Search form */}
+            {/* Search & Filters */}
             <div className="search-filters">
                 <input
                     type="text"
@@ -87,8 +126,16 @@ const PublicMarket = () => {
                     onChange={(e) => setPriceMax(e.target.value)}
                     min="0"
                 />
+                <select
+                    value={selectedCategoryId || ''}
+                    onChange={(e) => setSelectedCategoryId(e.target.value || null)}
+                >
+                    <option value="">Chọn danh mục</option>
+                    {renderCategoryOptions(categories)}
+                </select>
             </div>
 
+            {/* Orders Grid */}
             <div className="orders-grid">
                 {filteredOrders.length === 0 && <p>Không có giao dịch nào phù hợp.</p>}
                 {filteredOrders.map(order => (
@@ -119,6 +166,7 @@ const PublicMarket = () => {
                 ))}
             </div>
 
+            {/* Pagination */}
             <Pagination
                 currentPage={currentPage}
                 totalItems={total}

@@ -163,7 +163,9 @@ const MySales = () => {
         IsSellerChargeFee: formData.feeBearer === 'seller',
         FeeOnSuccess: Number(formData.price) * 0.05,
         Contact: formData.contact,
-        HiddenValue: formData.hiddenContent || ""
+        HiddenValue: formData.hiddenContent || "",
+        CategoryId: Number(formData.categoryId),
+        ProductLink: formData.productLink || ""
       };
 
       const response = await fetch(`${API_CONFIG.BASE_URL}${API_CONFIG.ENDPOINTS.ORDER_USER.CREATE_ORDER}`, {
