@@ -1,0 +1,283 @@
+.team-page {
+  min-height: calc(100vh - 200px);
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 2rem 0;
+  color: white;
+}
+
+.team-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.team-header {
+  text-align: center;
+  margin-bottom: 4rem;
+}
+
+.team-header h1 {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  font-weight: 700;
+}
+
+.team-subtitle {
+  font-size: 1.3rem;
+  opacity: 0.9;
+  font-weight: 300;
+}
+
+.team-section {
+  margin-bottom: 4rem;
+}
+
+.team-section h2 {
+  font-size: 2.5rem;
+  margin-bottom: 2rem;
+  text-align: center;
+  font-weight: 600;
+}
+
+.team-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.team-member {
+  background: rgba(255, 255, 255, 0.95);
+  color: #333;
+  border-radius: 20px;
+  padding: 2rem;
+  box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.team-member:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 25px 45px rgba(0,0,0,0.15);
+}
+
+.member-avatar {
+  font-size: 4rem;
+  margin-bottom: 1.5rem;
+}
+
+.member-info h3 {
+  font-size: 1.5rem;
+  color: #2c3e50;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+}
+
+.member-position {
+  color: #3498db;
+  font-weight: 500;
+  margin-bottom: 1rem;
+  font-size: 1.1rem;
+}
+
+.member-bio {
+  color: #555;
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
+  font-size: 0.95rem;
+}
+
+.member-details {
+  width: 100%;
+  border-top: 1px solid #eee;
+  padding-top: 1rem;
+}
+
+.detail-item {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+}
+
+.detail-label {
+  font-weight: 600;
+  color: #2c3e50;
+}
+
+.detail-value {
+  color: #7f8c8d;
+}
+
+.advisors-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.advisor-card {
+  background: rgba(255, 255, 255, 0.95);
+  color: #333;
+  border-radius: 20px;
+  padding: 2rem;
+  box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+  transition: transform 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.advisor-card:hover {
+  transform: translateY(-5px);
+}
+
+.advisor-avatar {
+  font-size: 3rem;
+  flex-shrink: 0;
+}
+
+.advisor-info h3 {
+  font-size: 1.3rem;
+  color: #2c3e50;
+  margin-bottom: 0.3rem;
+  font-weight: 600;
+}
+
+.advisor-position {
+  color: #3498db;
+  font-weight: 500;
+  margin-bottom: 0.3rem;
+}
+
+.advisor-organization {
+  color: #e74c3c;
+  font-weight: 500;
+  margin-bottom: 0.8rem;
+  font-size: 0.9rem;
+}
+
+.advisor-bio {
+  color: #555;
+  line-height: 1.6;
+  font-size: 0.95rem;
+}
+
+.culture-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.culture-item {
+  background: rgba(255, 255, 255, 0.95);
+  color: #333;
+  border-radius: 15px;
+  padding: 2rem;
+  text-align: center;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+  transition: transform 0.3s ease;
+}
+
+.culture-item:hover {
+  transform: translateY(-5px);
+}
+
+.culture-icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.culture-item h3 {
+  font-size: 1.3rem;
+  color: #2c3e50;
+  margin-bottom: 1rem;
+  font-weight: 600;
+}
+
+.culture-item p {
+  color: #555;
+  line-height: 1.6;
+  font-size: 0.95rem;
+}
+
+.join-team {
+  background: rgba(255, 255, 255, 0.95);
+  color: #333;
+  border-radius: 20px;
+  padding: 3rem;
+  text-align: center;
+  box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+}
+
+.join-team h2 {
+  font-size: 2.2rem;
+  color: #2c3e50;
+  margin-bottom: 1.5rem;
+  font-weight: 600;
+}
+
+.join-team p {
+  font-size: 1.1rem;
+  line-height: 1.8;
+  color: #555;
+  margin-bottom: 2rem;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.join-button {
+  display: inline-block;
+  background: linear-gradient(45deg, #3498db, #2980b9);
+  color: white;
+  padding: 1rem 2rem;
+  border-radius: 30px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: transform 0.3s ease;
+  box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
+}
+
+.join-button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(52, 152, 219, 0.4);
+}
+
+@media (max-width: 768px) {
+  .team-header h1 {
+    font-size: 2.2rem;
+  }
+
+  .team-section h2 {
+    font-size: 2rem;
+  }
+
+  .team-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .team-member {
+    padding: 1.5rem;
+  }
+
+  .advisors-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .advisor-card {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .culture-grid {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  }
+
+  .join-team {
+    padding: 2rem;
+  }
+}

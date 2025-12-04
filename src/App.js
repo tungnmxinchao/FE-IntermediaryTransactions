@@ -15,6 +15,15 @@ import Dashboard from './components/Dashboard/Dashboard';
 import Profile from './components/profile/Profile';
 import Deposit from './components/deposit/Deposit';
 import Withdraw from './components/withdraw/Withdraw';
+import About from './pages/About';
+import Team from './pages/Team';
+import Careers from './pages/Careers';
+import Contact from './pages/Contact';
+import Support from './pages/Support';
+import Privacy from './pages/Privacy';
+import Terms from './pages/Terms';
+import Refund from './pages/Refund';
+import FAQ from './pages/FAQ';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -254,6 +263,15 @@ const AppContent = () => {
             <Dashboard />
           </ProtectedRoute>
         } />
+        <Route path="/about" element={<About />} />
+        <Route path="/team" element={<Team />} />
+        <Route path="/careers" element={<Careers />} />
+        <Route path="/contact" element={<Contact />} />
+        <Route path="/support" element={<Support />} />
+        <Route path="/privacy" element={<Privacy />} />
+        <Route path="/terms" element={<Terms />} />
+        <Route path="/refund" element={<Refund />} />
+        <Route path="/faq" element={<FAQ />} />
       </Routes>
       {!location.pathname.startsWith('/dashboard') && <Footer />}
       <ToastContainer
