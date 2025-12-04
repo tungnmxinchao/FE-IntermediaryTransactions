@@ -156,7 +156,7 @@ const FAQ = () => {
         <div className="faq-header">
           <h1>Câu hỏi thường gặp</h1>
           <p className="faq-subtitle">
-            Tìm câu trả lời nhanh cho những thắc mắc phổ biến về nền tảng xanh
+            Tìm câu trả lời nhanh cho những thắc mắc phổ biến
           </p>
         </div>
 

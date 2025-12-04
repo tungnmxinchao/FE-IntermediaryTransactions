@@ -8,7 +8,7 @@ const Refund = () => {
         <div className="refund-header">
           <h1>Chính sách hoàn tiền</h1>
           <p className="refund-subtitle">
-            Cam kết bảo vệ quyền lợi người dùng và môi trường
+            Cam kết bảo vệ quyền lợi người dùng
           </p>
           <p className="last-updated">Cập nhật lần cuối: 01 tháng 12, 2024</p>
         </div>

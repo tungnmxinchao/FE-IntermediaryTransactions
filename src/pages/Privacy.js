@@ -8,7 +8,7 @@ const Privacy = () => {
         <div className="privacy-header">
           <h1>Chính sách bảo mật</h1>
           <p className="privacy-subtitle">
-            Cam kết bảo vệ thông tin cá nhân và môi trường của bạn
+            Cam kết bảo vệ thông tin cá nhân của bạn
           </p>
           <p className="last-updated">Cập nhật lần cuối: 01 tháng 12, 2024</p>
         </div>
