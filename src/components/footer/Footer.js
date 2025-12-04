@@ -20,7 +20,7 @@ const Footer = () => {
         <div className="footer-section">
           <h3>Dịch vụ</h3>
           <ul>
-            <li><Link to="/marketplace">Chợ công khai</Link></li>
+            <li><Link to="/public-market">Chợ công khai</Link></li>
             <li><Link to="/my-sales">Đơn bán của tôi</Link></li>
             <li><Link to="/my-purchases">Đơn mua của tôi</Link></li>
             <li><Link to="/support">Hỗ trợ</Link></li>

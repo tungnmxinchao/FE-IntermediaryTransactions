@@ -15,6 +15,7 @@ import Dashboard from './components/Dashboard/Dashboard';
 import Profile from './components/profile/Profile';
 import Deposit from './components/deposit/Deposit';
 import Withdraw from './components/withdraw/Withdraw';
+import ScrollToTop from './components/common/ScrollToTop';
 import About from './pages/About';
 import Team from './pages/Team';
 import Careers from './pages/Careers';
@@ -140,6 +141,7 @@ const AppContent = () => {
 
   return (
     <div className="App">
+      <ScrollToTop />
       <nav className="navbar">
         <div className="nav-brand">Green Transfer</div>
         <div className="nav-links">
