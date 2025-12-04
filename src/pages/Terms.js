@@ -8,7 +8,7 @@ const Terms = () => {
         <div className="terms-header">
           <h1>Điều khoản sử dụng</h1>
           <p className="terms-subtitle">
-            Quy tắc và điều kiện sử dụng nền tảng Trung Gian
+            Quy tắc và điều kiện sử dụng nền tảng Green Transfer
           </p>
           <p className="last-updated">Cập nhật lần cuối: 01 tháng 12, 2024</p>
         </div>
@@ -26,18 +26,18 @@ const Terms = () => {
             </div>
           </section>
 
-          <section className="terms-section">
-            <h2>2. Định nghĩa</h2>
-            <div className="section-content">
-              <ul>
-                <li><strong>"Nền tảng"</strong> hoặc <strong>"Trung Gian"</strong>: Nền tảng giao dịch trung gian trực tuyến</li>
-                <li><strong>"Người dùng"</strong>: Bất kỳ cá nhân hoặc tổ chức nào sử dụng dịch vụ của chúng tôi</li>
-                <li><strong>"Dịch vụ"</strong>: Các tính năng và chức năng được cung cấp bởi nền tảng</li>
-                <li><strong>"Nội dung"</strong>: Văn bản, hình ảnh, video và các tài liệu khác được đăng tải</li>
-                <li><strong>"Giao dịch"</strong>: Việc trao đổi hàng hóa, dịch vụ hoặc tiền tệ giữa người dùng</li>
-              </ul>
-            </div>
-          </section>
+        <section className="terms-section">
+          <h2>2. Định nghĩa</h2>
+          <div className="section-content">
+            <ul>
+              <li><strong>"Nền tảng"</strong> hoặc <strong>"Green Transfer"</strong>: Nền tảng giao dịch trung gian sản phẩm số trực tuyến</li>
+              <li><strong>"Người dùng"</strong>: Bất kỳ cá nhân hoặc tổ chức nào sử dụng dịch vụ giao dịch sản phẩm số của chúng tôi</li>
+              <li><strong>"Dịch vụ"</strong>: Các tính năng và chức năng giao dịch sản phẩm số được cung cấp bởi nền tảng</li>
+              <li><strong>"Nội dung"</strong>: Văn bản, hình ảnh, video và các tài liệu sản phẩm số khác được đăng tải</li>
+              <li><strong>"Giao dịch"</strong>: Việc trao đổi tài khoản game, mạng xã hội hoặc sản phẩm số giữa người dùng</li>
+            </ul>
+          </div>
+        </section>
 
           <section className="terms-section">
             <h2>3. Điều kiện sử dụng</h2>
@@ -185,3 +185,4 @@ const Terms = () => {
 };
 
 export default Terms;
+

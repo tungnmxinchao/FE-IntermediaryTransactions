@@ -9,7 +9,7 @@ const Support = () => {
       id: 'general',
       title: 'Hỗ trợ tổng quan',
       icon: '🛠️',
-      description: 'Hướng dẫn sử dụng nền tảng và giải đáp thắc mắc chung',
+      description: 'Hướng dẫn sử dụng nền tảng giao dịch sản phẩm số và giải đáp thắc mắc chung',
       channels: [
         { name: 'Chat trực tuyến', response: 'Tức thời', available: '24/7' },
         { name: 'Email', response: 'Trong 24h', available: '24/7' },
@@ -17,21 +17,21 @@ const Support = () => {
       ]
     },
     {
-      id: 'technical',
-      title: 'Hỗ trợ kỹ thuật',
-      icon: '💻',
-      description: 'Giải quyết các vấn đề kỹ thuật và lỗi hệ thống',
+      id: 'gaming',
+      title: 'Hỗ trợ Gaming',
+      icon: '🎮',
+      description: 'Giải quyết vấn đề về giao dịch tài khoản game và sản phẩm số',
       channels: [
-        { name: 'Ticket hệ thống', response: 'Trong 4h', available: '24/7' },
-        { name: 'Chat kỹ thuật', response: 'Tức thời', available: '8:00-22:00' },
-        { name: 'Hotline ưu tiên', response: 'Tức thời', available: '24/7' }
+        { name: 'Chat gaming', response: 'Tức thời', available: '24/7' },
+        { name: 'Ticket gaming', response: 'Trong 2h', available: '24/7' },
+        { name: 'Hotline gaming', response: 'Trong 30 phút', available: '8:00-22:00' }
       ]
     },
     {
       id: 'billing',
       title: 'Hỗ trợ thanh toán',
       icon: '💳',
-      description: 'Giải quyết vấn đề về thanh toán và hoàn tiền',
+      description: 'Giải quyết vấn đề về thanh toán và hoàn tiền cho giao dịch sản phẩm số',
       channels: [
         { name: 'Email thanh toán', response: 'Trong 12h', available: '24/7' },
         { name: 'Chat thanh toán', response: 'Trong 30 phút', available: '8:00-18:00' },
@@ -42,7 +42,7 @@ const Support = () => {
       id: 'security',
       title: 'Bảo mật & An toàn',
       icon: '🔒',
-      description: 'Báo cáo vấn đề bảo mật và hỗ trợ khôi phục tài khoản',
+      description: 'Báo cáo vấn đề bảo mật và hỗ trợ khôi phục tài khoản game',
       channels: [
         { name: 'Đường dây nóng', response: 'Tức thời', available: '24/7' },
         { name: 'Email bảo mật', response: 'Trong 2h', available: '24/7' },
@@ -89,7 +89,7 @@ const Support = () => {
         <div className="support-header">
           <h1>Trung tâm hỗ trợ</h1>
           <p className="support-subtitle">
-            Chúng tôi luôn sẵn sàng hỗ trợ bạn với mọi vấn đề
+            Chúng tôi luôn sẵn sàng hỗ trợ bạn với mọi vấn đề về giao dịch sản phẩm số
           </p>
         </div>
 
@@ -195,3 +195,4 @@ const Support = () => {
 };
 
 export default Support;
+

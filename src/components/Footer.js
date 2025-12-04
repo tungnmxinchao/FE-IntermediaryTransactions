@@ -56,7 +56,7 @@ const Footer = () => {
       </div>
 
       <div className="footer-bottom">
-        <p>&copy; 2024 Trung Gian. Tất cả các quyền được bảo lưu.</p>
+        <p>&copy; 2024 Green Transfer. Tất cả các quyền được bảo lưu.</p>
       </div>
     </footer>
   );

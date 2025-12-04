@@ -6,50 +6,50 @@ const Team = () => {
     {
       name: "Nguyễn Văn A",
       position: "Giám đốc điều hành",
-      bio: "Với hơn 10 năm kinh nghiệm trong lĩnh vực fintech, ông Nguyễn dẫn dắt đội ngũ phát triển nền tảng giao dịch an toàn và hiệu quả.",
+      bio: "Với hơn 10 năm kinh nghiệm trong lĩnh vực game và sản phẩm số, ông Nguyễn dẫn dắt đội ngũ phát triển nền tảng giao dịch an toàn và hiệu quả cho cộng đồng game thủ.",
       image: "👨‍💼",
       experience: "10+ năm",
-      expertise: "Quản lý sản phẩm, Chiến lược kinh doanh"
+      expertise: "Quản lý sản phẩm số, Chiến lược gaming"
     },
     {
       name: "Trần Thị B",
       position: "Giám đốc công nghệ",
-      bio: "Chuyên gia công nghệ với nền tảng vững chắc về bảo mật thông tin và kiến trúc hệ thống phân tán.",
+      bio: "Chuyên gia công nghệ với nền tảng vững chắc về bảo mật thông tin và kiến trúc hệ thống phân tán cho giao dịch tài khoản game và sản phẩm số.",
       image: "👩‍💻",
       experience: "8+ năm",
-      expertise: "Bảo mật, Kiến trúc hệ thống"
+      expertise: "Bảo mật sản phẩm số, Kiến trúc hệ thống"
     },
     {
       name: "Lê Văn C",
       position: "Trưởng phòng phát triển",
-      bio: "Lãnh đạo đội ngũ kỹ thuật, đảm bảo chất lượng code và hiệu suất hệ thống luôn đạt tiêu chuẩn cao nhất.",
+      bio: "Lãnh đạo đội ngũ kỹ thuật, đảm bảo chất lượng code và hiệu suất hệ thống luôn đạt tiêu chuẩn cao nhất cho giao dịch sản phẩm số.",
       image: "👨‍💻",
       experience: "7+ năm",
-      expertise: "Full-stack Development, DevOps"
+      expertise: "Full-stack Development, DevOps gaming"
     },
     {
       name: "Phạm Thị D",
       position: "Trưởng phòng kinh doanh",
-      bio: "Chuyên gia marketing và kinh doanh với kinh nghiệm mở rộng thị trường và phát triển đối tác chiến lược.",
+      bio: "Chuyên gia marketing và kinh doanh với kinh nghiệm mở rộng thị trường game và phát triển đối tác chiến lược trong lĩnh vực sản phẩm số.",
       image: "👩‍💼",
       experience: "6+ năm",
-      expertise: "Marketing, Quan hệ đối tác"
+      expertise: "Marketing gaming, Quan hệ đối tác số"
     },
     {
       name: "Hoàng Văn E",
       position: "Trưởng phòng bảo mật",
-      bio: "Chuyên gia an ninh mạng, đảm bảo hệ thống luôn được bảo vệ trước các mối đe dọa tiềm ẩn.",
+      bio: "Chuyên gia an ninh mạng, đảm bảo hệ thống luôn được bảo vệ trước các mối đe dọa tiềm ẩn trong giao dịch tài khoản game và sản phẩm số.",
       image: "👨‍⚖️",
       experience: "9+ năm",
-      expertise: "Cybersecurity, Compliance"
+      expertise: "Cybersecurity, Compliance sản phẩm số"
     },
     {
       name: "Đỗ Thị F",
       position: "Trưởng phòng chăm sóc khách hàng",
-      bio: "Đảm bảo trải nghiệm người dùng tuyệt vời thông qua dịch vụ chăm sóc khách hàng chuyên nghiệp 24/7.",
+      bio: "Đảm bảo trải nghiệm người dùng tuyệt vời thông qua dịch vụ chăm sóc khách hàng chuyên nghiệp 24/7 cho cộng đồng game thủ và người dùng sản phẩm số.",
       image: "👩‍💼",
       experience: "5+ năm",
-      expertise: "Customer Experience, Support"
+      expertise: "Customer Experience gaming, Support số"
     }
   ];
 
@@ -76,7 +76,7 @@ const Team = () => {
         <div className="team-header">
           <h1>Đội ngũ của chúng tôi</h1>
           <p className="team-subtitle">
-            Những con người đằng sau sự thành công của Trung Gian
+            Những con người đằng sau sự thành công của Green Transfer
           </p>
         </div>
 
@@ -128,27 +128,27 @@ const Team = () => {
         </section>
 
         <section className="team-section">
-          <h2>Văn hóa làm việc</h2>
+          <h2>Văn hóa làm việc số</h2>
           <div className="culture-grid">
             <div className="culture-item">
-              <div className="culture-icon">🎯</div>
-              <h3>Mục tiêu chung</h3>
-              <p>Đội ngũ chúng tôi luôn hướng tới mục tiêu tạo ra giá trị thực sự cho cộng đồng</p>
+              <div className="culture-icon">🎮</div>
+              <h3>Game First</h3>
+              <p>Đội ngũ chúng tôi luôn hướng tới mục tiêu tạo ra giá trị thực sự cho cộng đồng game thủ</p>
             </div>
             <div className="culture-item">
               <div className="culture-icon">🤝</div>
               <h3>Hợp tác</h3>
-              <p>Môi trường làm việc đề cao tinh thần hợp tác và hỗ trợ lẫn nhau</p>
+              <p>Môi trường làm việc đề cao tinh thần hợp tác và hỗ trợ lẫn nhau cho cộng đồng số</p>
             </div>
             <div className="culture-item">
               <div className="culture-icon">🚀</div>
-              <h3>Đổi mới</h3>
-              <p>Khuyến khích sáng tạo và áp dụng công nghệ mới vào sản phẩm</p>
+              <h3>Đổi mới số</h3>
+              <p>Khuyến khích sáng tạo và áp dụng công nghệ mới vào sản phẩm số</p>
             </div>
             <div className="culture-item">
               <div className="culture-icon">📈</div>
-              <h3>Phát triển</h3>
-              <p>Cam kết đầu tư vào việc học tập và phát triển kỹ năng của nhân viên</p>
+              <h3>Phát triển kỹ năng</h3>
+              <p>Cam kết đầu tư vào việc học tập và phát triển kỹ năng số của nhân viên</p>
             </div>
           </div>
         </section>
@@ -169,3 +169,4 @@ const Team = () => {
 };
 
 export default Team;
+

@@ -21,9 +21,9 @@ const FAQ = () => {
       icon: '❓',
       questions: [
         {
-          id: 'what-is-trunggian',
-          question: 'Trung Gian là gì?',
-          answer: 'Trung Gian là nền tảng giao dịch trung gian trực tuyến giúp kết nối người mua và người bán một cách an toàn, minh bạch. Chúng tôi cung cấp dịch vụ escrow để bảo vệ quyền lợi của cả hai bên trong giao dịch.'
+          id: 'what-is-greentransfer',
+          question: 'Green Transfer là gì?',
+          answer: 'Green Transfer là nền tảng giao dịch trung gian trực tuyến chuyên về sản phẩm số, giúp kết nối người mua và người bán tài khoản game, mạng xã hội một cách an toàn, minh bạch. Chúng tôi cung cấp dịch vụ escrow để bảo vệ quyền lợi của cả hai bên trong giao dịch.'
         },
         {
           id: 'how-to-register',
@@ -32,13 +32,13 @@ const FAQ = () => {
         },
         {
           id: 'is-safe',
-          question: 'Giao dịch trên Trung Gian có an toàn không?',
+          question: 'Giao dịch trên Green Transfer có an toàn không?',
           answer: 'Có, chúng tôi áp dụng nhiều lớp bảo mật tiên tiến bao gồm mã hóa SSL, xác thực 2 yếu tố, và hệ thống escrow. Tỷ lệ thành công của giao dịch trên nền tảng đạt 99.9%.'
         },
         {
           id: 'fees',
-          question: 'Phí dịch vụ của Trung Gian là bao nhiêu?',
-          answer: 'Phí giao dịch dao động từ 1-2% tùy theo loại giao dịch. Phí nạp tiền thường miễn phí, phí rút tiền phụ thuộc vào phương thức bạn chọn. Chi tiết phí được hiển thị rõ ràng trước khi thực hiện giao dịch.'
+          question: 'Phí dịch vụ của Green Transfer là bao nhiêu?',
+          answer: 'Phí giao dịch dao động từ 1-2% tùy theo loại sản phẩm số. Phí nạp tiền thường miễn phí, phí rút tiền phụ thuộc vào phương thức bạn chọn. Chi tiết phí được hiển thị rõ ràng trước khi thực hiện giao dịch.'
         }
       ]
     },
@@ -69,28 +69,28 @@ const FAQ = () => {
       ]
     },
     transactions: {
-      title: 'Giao dịch',
-      icon: '💱',
+      title: 'Giao dịch sản phẩm số',
+      icon: '🎮',
       questions: [
         {
           id: 'how-transaction-works',
-          question: 'Quy trình giao dịch như thế nào?',
-          answer: '1) Người bán đăng tin. 2) Người mua liên hệ thỏa thuận. 3) Người mua chuyển tiền vào escrow. 4) Người bán giao hàng. 5) Người mua xác nhận và tiền được giải phóng. Toàn bộ quá trình được giám sát bởi hệ thống.'
+          question: 'Quy trình giao dịch tài khoản game như thế nào?',
+          answer: '1) Người bán đăng tin tài khoản game. 2) Người mua liên hệ thỏa thuận. 3) Người mua chuyển tiền vào escrow. 4) Người bán chuyển giao tài khoản (ID, mật khẩu). 5) Người mua xác nhận và tiền được giải phóng. Toàn bộ quá trình được giám sát bởi hệ thống.'
         },
         {
           id: 'escrow-what',
-          question: 'Escrow là gì và tại sao cần thiết?',
-          answer: 'Escrow là tài khoản trung gian giữ tiền của người mua cho đến khi giao dịch hoàn thành thành công. Điều này bảo vệ cả hai bên: người mua chắc chắn nhận được hàng, người bán chắc chắn nhận được tiền.'
+          question: 'Escrow bảo vệ gì trong giao dịch sản phẩm số?',
+          answer: 'Escrow là tài khoản trung gian giữ tiền của người mua cho đến khi nhận được tài khoản game/sản phẩm số. Điều này bảo vệ cả hai bên: người mua chắc chắn nhận được tài khoản hoạt động, người bán chắc chắn nhận được tiền.'
         },
         {
           id: 'transaction-time',
-          question: 'Giao dịch mất bao lâu để hoàn thành?',
-          answer: 'Thời gian phụ thuộc vào loại giao dịch: giao dịch số thường 5-15 phút, giao dịch vật lý 1-7 ngày. Người bán có 48 giờ để giao hàng sau khi nhận tiền escrow.'
+          question: 'Giao dịch sản phẩm số mất bao lâu?',
+          answer: 'Giao dịch sản phẩm số thường hoàn thành trong 5-15 phút. Người bán có 30 phút để chuyển giao tài khoản sau khi nhận tiền escrow. Nếu quá thời hạn, hệ thống sẽ tự động hoàn tiền.'
         },
         {
           id: 'cancel-transaction',
-          question: 'Làm thế nào để hủy giao dịch?',
-          answer: 'Giao dịch chỉ có thể hủy khi cả hai bên đồng thuận hoặc có tranh chấp. Liên hệ hỗ trợ để được hướng dẫn. Nếu hủy sau khi người bán đã giao hàng, có thể áp dụng phí.'
+          question: 'Làm thế nào để hủy giao dịch sản phẩm số?',
+          answer: 'Giao dịch chỉ có thể hủy khi cả hai bên đồng thuận hoặc tài khoản không hoạt động. Liên hệ hỗ trợ để được hướng dẫn. Nếu hủy sau khi đã chuyển giao tài khoản, có thể áp dụng phí xử lý.'
         }
       ]
     },
@@ -121,28 +121,28 @@ const FAQ = () => {
       ]
     },
     disputes: {
-      title: 'Tranh chấp',
+      title: 'Tranh chấp sản phẩm số',
       icon: '⚖️',
       questions: [
         {
           id: 'dispute-what',
-          question: 'Tranh chấp là gì và khi nào xảy ra?',
-          answer: 'Tranh chấp xảy ra khi hai bên không thỏa thuận được về việc giao dịch. Điều này có thể do hàng không đúng mô tả, giao hàng trễ, hoặc vấn đề chất lượng.'
+          question: 'Tranh chấp về sản phẩm số là gì?',
+          answer: 'Tranh chấp xảy ra khi hai bên không thỏa thuận được về giao dịch tài khoản game/sản phẩm số. Điều này có thể do tài khoản không hoạt động, thông tin sai lệch, hoặc vi phạm cam kết.'
         },
         {
           id: 'how-report-dispute',
-          question: 'Làm thế nào để báo tranh chấp?',
-          answer: 'Trong trang chi tiết giao dịch, nhấp "Báo tranh chấp" và mô tả vấn đề chi tiết với bằng chứng. Đội ngũ hỗ trợ sẽ can thiệp và đưa ra quyết định công bằng.'
+          question: 'Làm thế nào để báo tranh chấp tài khoản game?',
+          answer: 'Trong trang chi tiết giao dịch, nhấp "Báo tranh chấp" và mô tả vấn đề chi tiết (tài khoản không đăng nhập được, thông tin sai, v.v.). Đội ngũ hỗ trợ sẽ can thiệp và đưa ra quyết định công bằng.'
         },
         {
           id: 'dispute-resolution',
-          question: 'Tranh chấp được giải quyết như thế nào?',
-          answer: 'Chúng tôi xem xét bằng chứng từ cả hai bên, có thể yêu cầu thêm thông tin. Quyết định cuối cùng dựa trên chính sách và bằng chứng, thường trong vòng 3-7 ngày.'
+          question: 'Tranh chấp tài khoản game được giải quyết như thế nào?',
+          answer: 'Chúng tôi kiểm tra tài khoản game với thông tin được cung cấp, có thể yêu cầu video demo hoặc bằng chứng khác. Quyết định cuối cùng dựa trên chính sách và bằng chứng, thường trong vòng 24-48 giờ.'
         },
         {
           id: 'appeal-decision',
           question: 'Tôi không đồng ý với quyết định, có thể khiếu nại không?',
-          answer: 'Có, bạn có thể khiếu nại trong vòng 30 ngày với bằng chứng mới. Chúng tôi sẽ xem xét lại và có thể mời cả hai bên tham gia hòa giải.'
+          answer: 'Có, bạn có thể khiếu nại trong vòng 7 ngày với bằng chứng mới. Chúng tôi sẽ xem xét lại và có thể mời cả hai bên tham gia hòa giải.'
         }
       ]
     }
@@ -156,7 +156,7 @@ const FAQ = () => {
         <div className="faq-header">
           <h1>Câu hỏi thường gặp</h1>
           <p className="faq-subtitle">
-            Tìm câu trả lời nhanh cho những thắc mắc phổ biến
+            Tìm câu trả lời nhanh cho những thắc mắc phổ biến về nền tảng xanh
           </p>
         </div>
 
@@ -214,3 +214,4 @@ const FAQ = () => {
 };
 
 export default FAQ;
+

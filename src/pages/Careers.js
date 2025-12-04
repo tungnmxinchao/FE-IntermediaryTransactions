@@ -12,18 +12,18 @@ const Careers = () => {
       location: "Hà Nội",
       type: "Full-time",
       salary: "15-25 triệu VND",
-      description: "Phát triển giao diện người dùng với React.js và các công nghệ frontend hiện đại",
+      description: "Phát triển giao diện người dùng cho nền tảng giao dịch sản phẩm số với React.js và các công nghệ frontend hiện đại",
       requirements: [
         "2+ năm kinh nghiệm với React.js",
         "Thành thạo HTML, CSS, JavaScript",
         "Kinh nghiệm với state management (Redux, Context API)",
-        "Hiểu biết về responsive design"
+        "Hiểu biết về responsive design cho thiết bị di động"
       ],
       benefits: [
         "Lương thưởng cạnh tranh",
         "Bảo hiểm đầy đủ",
         "Môi trường làm việc năng động",
-        "Cơ hội thăng tiến"
+        "Cơ hội thăng tiến trong lĩnh vực gaming"
       ]
     },
     {
@@ -49,23 +49,23 @@ const Careers = () => {
     },
     {
       id: 3,
-      title: "Product Manager",
+      title: "Gaming Product Manager",
       category: "product",
       location: "Hà Nội",
       type: "Full-time",
       salary: "25-40 triệu VND",
-      description: "Quản lý sản phẩm và định hướng chiến lược phát triển nền tảng",
+      description: "Quản lý sản phẩm gaming và định hướng chiến lược phát triển nền tảng giao dịch tài khoản game",
       requirements: [
         "3+ năm kinh nghiệm Product Management",
-        "Kinh nghiệm fintech/blockchain là lợi thế",
-        "Kỹ năng phân tích và ra quyết định",
-        "Tiếng Anh giao tiếp tốt"
+        "Kinh nghiệm gaming/e-commerce là lợi thế",
+        "Hiểu biết về thị trường game Việt Nam",
+        "Kỹ năng phân tích và ra quyết định"
       ],
       benefits: [
         "Lương thưởng theo KPI",
         "Tham gia hội đồng quản trị",
         "Cơ hội lãnh đạo team",
-        "Đào tạo MBA (nếu cần)"
+        "Đào tạo về gaming industry"
       ]
     },
     {
@@ -147,24 +147,24 @@ const Careers = () => {
 
   const whyJoinUs = [
     {
-      icon: "🚀",
-      title: "Sự phát triển",
-      description: "Cơ hội phát triển bản thân và thăng tiến nghề nghiệp"
+      icon: "🎮",
+      title: "Sự phát triển số",
+      description: "Cơ hội phát triển bản thân và thăng tiến nghề nghiệp trong lĩnh vực game và sản phẩm số"
     },
     {
       icon: "💰",
       title: "Lương thưởng cạnh tranh",
-      description: "Mức lương và phúc lợi vượt trội trong ngành"
+      description: "Mức lương và phúc lợi vượt trội trong ngành gaming và sản phẩm số"
     },
     {
       icon: "🤝",
-      title: "Môi trường làm việc",
-      description: "Văn hóa doanh nghiệp đề cao hợp tác và sáng tạo"
+      title: "Môi trường làm việc sáng tạo",
+      description: "Văn hóa doanh nghiệp đề cao hợp tác và sáng tạo trong lĩnh vực số"
     },
     {
-      icon: "🌍",
-      title: "Dự án quốc tế",
-      description: "Tham gia vào các dự án có tầm ảnh hưởng toàn cầu"
+      icon: "🌐",
+      title: "Dự án toàn cầu",
+      description: "Tham gia vào các dự án sản phẩm số có tầm ảnh hưởng toàn cầu"
     }
   ];
 
@@ -172,14 +172,14 @@ const Careers = () => {
     <div className="careers-page">
       <div className="careers-container">
         <div className="careers-header">
-          <h1>Tham gia cùng Trung Gian</h1>
+          <h1>Tham gia cùng Green Transfer</h1>
           <p className="careers-subtitle">
-            Xây dựng tương lai của nền tảng giao dịch fintech hàng đầu Việt Nam
+            Xây dựng tương lai của nền tảng giao dịch sản phẩm số hàng đầu Việt Nam
           </p>
         </div>
 
         <section className="why-join-section">
-          <h2>Tại sao chọn Trung Gian?</h2>
+          <h2>Tại sao chọn Green Transfer?</h2>
           <div className="why-join-grid">
             {whyJoinUs.map((item, index) => (
               <div key={index} className="why-join-item">
@@ -270,3 +270,4 @@ const Careers = () => {
 };
 
 export default Careers;
+

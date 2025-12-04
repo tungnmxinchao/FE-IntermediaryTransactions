@@ -8,23 +8,23 @@ const Refund = () => {
         <div className="refund-header">
           <h1>Chính sách hoàn tiền</h1>
           <p className="refund-subtitle">
-            Cam kết bảo vệ quyền lợi người dùng
+            Cam kết bảo vệ quyền lợi người dùng và môi trường
           </p>
           <p className="last-updated">Cập nhật lần cuối: 01 tháng 12, 2024</p>
         </div>
 
         <div className="refund-content">
-          <section className="refund-section">
-            <h2>1. Nguyên tắc chung</h2>
-            <div className="section-content">
-              <p>
-                Trung Gian cam kết bảo vệ quyền lợi của người dùng thông qua chính sách
-                hoàn tiền công bằng và minh bạch. Chúng tôi hiểu rằng giao dịch trực tuyến
-                có thể gặp rủi ro, vì vậy chúng tôi thiết lập quy trình hoàn tiền rõ ràng
-                để xử lý các trường hợp phát sinh.
-              </p>
-            </div>
-          </section>
+        <section className="refund-section">
+          <h2>1. Nguyên tắc chung</h2>
+          <div className="section-content">
+            <p>
+              Green Transfer cam kết bảo vệ quyền lợi của người dùng thông qua chính sách
+              hoàn tiền công bằng và minh bạch cho giao dịch sản phẩm số. Chúng tôi hiểu rằng
+              giao dịch tài khoản game và sản phẩm số trực tuyến có thể gặp rủi ro, vì vậy
+              chúng tôi thiết lập quy trình hoàn tiền rõ ràng để xử lý các trường hợp phát sinh.
+            </p>
+          </div>
+        </section>
 
           <section className="refund-section">
             <h2>2. Trường hợp được hoàn tiền</h2>
@@ -39,8 +39,8 @@ const Refund = () => {
 
               <h3>2.2 Vi phạm thỏa thuận</h3>
               <ul>
-                <li>Người bán không giao hàng/dịch vụ như cam kết</li>
-                <li>Hàng hóa/dịch vụ không đúng mô tả</li>
+                <li>Người bán không chuyển giao tài khoản game/sản phẩm số như cam kết</li>
+                <li>Tài khoản game/sản phẩm số không đúng mô tả hoặc bị khóa</li>
                 <li>Giao dịch bị hủy do lỗi của cả hai bên</li>
                 <li>Vi phạm chính sách của nền tảng</li>
               </ul>
@@ -175,3 +175,4 @@ const Refund = () => {
 };
 
 export default Refund;
+

@@ -8,22 +8,22 @@ const Privacy = () => {
         <div className="privacy-header">
           <h1>Chính sách bảo mật</h1>
           <p className="privacy-subtitle">
-            Cam kết bảo vệ thông tin cá nhân của bạn
+            Cam kết bảo vệ thông tin cá nhân và môi trường của bạn
           </p>
           <p className="last-updated">Cập nhật lần cuối: 01 tháng 12, 2024</p>
         </div>
 
         <div className="privacy-content">
-          <section className="privacy-section">
-            <h2>1. Thông tin chúng tôi thu thập</h2>
-            <div className="section-content">
-              <h3>1.1 Thông tin bạn cung cấp</h3>
-              <ul>
-                <li>Thông tin đăng ký tài khoản (tên, email, số điện thoại)</li>
-                <li>Thông tin xác thực danh tính cho giao dịch</li>
-                <li>Thông tin giao dịch và lịch sử sử dụng</li>
-                <li>Thông tin liên hệ khi bạn gửi yêu cầu hỗ trợ</li>
-              </ul>
+        <section className="privacy-section">
+          <h2>1. Thông tin chúng tôi thu thập</h2>
+          <div className="section-content">
+            <h3>1.1 Thông tin bạn cung cấp</h3>
+            <ul>
+              <li>Thông tin đăng ký tài khoản (tên, email, số điện thoại)</li>
+              <li>Thông tin xác thực danh tính cho giao dịch sản phẩm số</li>
+              <li>Thông tin giao dịch tài khoản game và lịch sử sử dụng</li>
+              <li>Thông tin liên hệ khi bạn gửi yêu cầu hỗ trợ</li>
+            </ul>
 
               <h3>1.2 Thông tin chúng tôi tự động thu thập</h3>
               <ul>
@@ -38,13 +38,13 @@ const Privacy = () => {
           <section className="privacy-section">
             <h2>2. Cách chúng tôi sử dụng thông tin</h2>
             <div className="section-content">
-              <ul>
-                <li><strong>Cung cấp dịch vụ:</strong> Xử lý giao dịch và duy trì tài khoản của bạn</li>
-                <li><strong>Bảo mật:</strong> Ngăn chặn gian lận và bảo vệ nền tảng</li>
-                <li><strong>Hỗ trợ khách hàng:</strong> Giải quyết vấn đề và cải thiện dịch vụ</li>
-                <li><strong>Tương tác:</strong> Gửi thông báo quan trọng về tài khoản và giao dịch</li>
-                <li><strong>Cải thiện:</strong> Phân tích xu hướng và nâng cao trải nghiệm người dùng</li>
-              </ul>
+            <ul>
+              <li><strong>Cung cấp dịch vụ:</strong> Xử lý giao dịch tài khoản game và sản phẩm số</li>
+              <li><strong>Bảo mật:</strong> Ngăn chặn gian lận và bảo vệ giao dịch sản phẩm số</li>
+              <li><strong>Hỗ trợ khách hàng:</strong> Giải quyết vấn đề về tài khoản game và giao dịch</li>
+              <li><strong>Tương tác:</strong> Gửi thông báo quan trọng về tài khoản game và giao dịch</li>
+              <li><strong>Cải thiện:</strong> Phân tích xu hướng gaming và nâng cao trải nghiệm người dùng</li>
+            </ul>
             </div>
           </section>
 
@@ -144,3 +144,4 @@ const Privacy = () => {
 };
 
 export default Privacy;
+
